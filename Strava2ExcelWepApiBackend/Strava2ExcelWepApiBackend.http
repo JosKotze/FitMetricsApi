@@ -1,0 +1,6 @@
+@Strava2ExcelWepApiBackend_HostAddress = http://localhost:5241
+
+GET {{Strava2ExcelWepApiBackend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
