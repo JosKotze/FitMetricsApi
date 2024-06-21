@@ -12,7 +12,7 @@ namespace Strava2ExcelWebApiBackend.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            return new string[] { "Howzit", "Awhoi" };
+            return new string[] { "Server is", "working!" };
         }
 
         // GET api/<AuthCodeCallbackController>/5

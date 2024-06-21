@@ -12,15 +12,15 @@ namespace Strava2ExcelWepApiBackend.Controllers
     {
         // GET: api/<ActivitiesController>
         [HttpGet]
-        public async Task<ActionResult<List<Activities>>> Get()
+        public async Task<ActionResult<List<Activity>>> Get()
         {
             try
             {
                 // Assuming you have an access token already available
-                string accessToken = "336b78f68633c9bc32eb8ee94c7318fd49a10dcb";
+                string accessToken = "9466b75e5b1227063b7e44e345f1839316cb33d5";
 
                 // Call the static method from StravaService to get activities
-                List<Activities> activities = await StravaService.GetActivitiesFromStrava(accessToken);
+                List<Activity> activities = await StravaService.GetActivitiesFromStrava(accessToken);
 
                 // Return the list of activities
                 return activities;
