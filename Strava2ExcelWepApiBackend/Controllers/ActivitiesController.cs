@@ -17,7 +17,7 @@ namespace Strava2ExcelWepApiBackend.Controllers
             try
             {
                 // Assuming you have an access token already available
-                string accessToken = "9466b75e5b1227063b7e44e345f1839316cb33d5";
+                string accessToken = "d910eda2ac40b7efbf08ec2d6081e10abc660fc5";
 
                 // Call the static method from StravaService to get activities
                 List<Activity> activities = await StravaService.GetActivitiesFromStrava(accessToken);
@@ -32,29 +32,5 @@ namespace Strava2ExcelWepApiBackend.Controllers
             }
         }
 
-        // GET api/<ActivitiesController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<ActivitiesController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<ActivitiesController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<ActivitiesController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }

@@ -28,18 +28,22 @@ namespace Strava2ExcelWebApiBackend.Controllers
         }
 
         [HttpPost("signup")]
-        public async Task<IActionResult> Signup(UserDto userDto)
+        public async Task<IActionResult> Signup(Athlete athlete)
         {
-            if (await _context.Athletes.AnyAsync(u => u.Email == userDto.Email))
+            if (await _context.Athletes.AnyAsync(u => u.Email == athlete.Email))
             {
                 return BadRequest("User already exists");
             }
 
             var user = new Athlete
             {
-                Name = userDto.Name,
-                Email = userDto.Email,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(userDto.Password)
+                Name = athlete.Name,
+                Surname = athlete.Surname,              
+                AccessToken = athlete.AccessToken,
+                Email = athlete.Email,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(athlete.PasswordHash),
+                RefreshTokenCreated = DateTime.Now,
+                RefreshToken = athlete.RefreshToken,
             };
 
             _context.Athletes.Add(user);

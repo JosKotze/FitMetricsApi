@@ -2,8 +2,8 @@
 {
     public class UserAuthentication
     {
-        public Guid Id { get; set; }
-        public Guid passwordHash { get; set; }
+        public int Id { get; set; }
+        public string passwordHash { get; set; }
         public string accessToken { get; set; }
         public string refreshToken { get; set; }
         public DateTime? refreashTokenCreated { get; set; }

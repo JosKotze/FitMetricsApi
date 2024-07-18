@@ -33,8 +33,8 @@ namespace Strava2ExcelWebApiBackend.Migrations
                     b.Property<int>("achievement_count")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("athleteId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("athleteId")
+                        .HasColumnType("int");
 
                     b.Property<int>("athlete_count")
                         .HasColumnType("int");
@@ -120,8 +120,8 @@ namespace Strava2ExcelWebApiBackend.Migrations
                     b.Property<bool>("manual")
                         .HasColumnType("bit");
 
-                    b.Property<string>("mapid")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("mapid")
+                        .HasColumnType("int");
 
                     b.Property<double?>("max_heartrate")
                         .HasColumnType("float");
@@ -207,12 +207,13 @@ namespace Strava2ExcelWebApiBackend.Migrations
 
             modelBuilder.Entity("Strava2ExcelWebApiBackend.Models.Athlete", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AccessToken")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
@@ -226,12 +227,11 @@ namespace Strava2ExcelWebApiBackend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("RefreashTokenCreated")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("RefreshToken")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RefreshTokenCreated")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Surname")
                         .HasColumnType("nvarchar(max)");
@@ -243,8 +243,11 @@ namespace Strava2ExcelWebApiBackend.Migrations
 
             modelBuilder.Entity("Strava2ExcelWebApiBackend.Models.Map", b =>
                 {
-                    b.Property<string>("id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
                     b.Property<int>("resource_state")
                         .HasColumnType("int");
@@ -268,7 +271,9 @@ namespace Strava2ExcelWebApiBackend.Migrations
 
                     b.HasOne("Strava2ExcelWebApiBackend.Models.Map", "map")
                         .WithMany()
-                        .HasForeignKey("mapid");
+                        .HasForeignKey("mapid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("athlete");
 
