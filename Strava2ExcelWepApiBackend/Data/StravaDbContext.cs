@@ -24,12 +24,12 @@ namespace Strava2ExcelWebApiBackend.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            // Additional configuration for Activities entity if needed
-            modelBuilder.Entity<Models.Activity>(entity =>
+            modelBuilder.Entity<FitmetricModel.Activity>(entity =>
             {
                 entity.HasKey(e => e.Id);
-                // Add any additional configuration here
+                entity.Property(e => e.Id)
+                      .ValueGeneratedOnAdd(); // Ensure this is set
+                                              // Configure other properties and relationships as needed
             });
         }
 
