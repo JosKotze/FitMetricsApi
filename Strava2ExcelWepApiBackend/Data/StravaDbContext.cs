@@ -1,8 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Strava2ExcelWebApiBackend.Models;
+using FitmetricModel = Strava2ExcelWebApiBackend.Models;
 using System.Data;
 using System.Diagnostics;
 using System.Xml;
+
+// command for db context update:
+// dotnet ef migrations add InitialCreate -o Data/Migrations
+// dotnet ef database update
 
 namespace Strava2ExcelWebApiBackend.Data
 {
@@ -13,8 +17,9 @@ namespace Strava2ExcelWebApiBackend.Data
 
         }
 
-        //public DbSet<Activity> Activities { get; set; }
-        public DbSet<Athlete> Athletes { get; set; }
+        public DbSet<FitmetricModel.Activity> Activities { get; set; }
+        public DbSet<FitmetricModel.User> Athletes { get; set; }
+        public object Users { get; internal set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -23,7 +28,7 @@ namespace Strava2ExcelWebApiBackend.Data
             // Additional configuration for Activities entity if needed
             modelBuilder.Entity<Models.Activity>(entity =>
             {
-                entity.HasKey(e => e.id);
+                entity.HasKey(e => e.Id);
                 // Add any additional configuration here
             });
         }
