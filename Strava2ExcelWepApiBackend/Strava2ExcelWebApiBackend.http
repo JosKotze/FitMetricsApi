@@ -1,0 +1,15 @@
+﻿@Strava2ExcelWebApiBackend_HostAddress = https://localhost:7279
+
+POST {{Strava2ExcelWebApiBackend_HostAddress}}/api/activities
+Content-Type: application/json
+
+"string"
+
+###
+
+POST {{Strava2ExcelWebApiBackend_HostAddress}}/api/authcodecallback
+Content-Type: application/json
+
+"string"
+
+###

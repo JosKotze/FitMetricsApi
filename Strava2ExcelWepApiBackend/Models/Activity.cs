@@ -1,7 +1,8 @@
 ﻿namespace Strava2ExcelWebApiBackend.Models
 {
-    public class Activities
+    public class Activity
     {
+        public string pace { get; set; }
         public int resource_state { get; set; }
         public Athlete athlete { get; set; } // Use Athlete class here
         public string name { get; set; }
@@ -53,5 +54,11 @@
         public double? max_heartrate { get; set; }
         public double? elev_high { get; set; }
         public double? elev_low { get; set; }
+
+        public Activity()
+        {
+
+        }
+
     }
 }
