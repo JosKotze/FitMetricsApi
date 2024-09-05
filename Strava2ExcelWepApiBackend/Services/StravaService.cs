@@ -11,15 +11,26 @@ using System.Collections.Generic;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System.Globalization;
+using System.Diagnostics;
+using Strava2ExcelWebApiBackend.Data;
+using Strava2ExcelWebApiBackend.Interfaces;
 // we are using EPPlus nuget package
 
 
 
 namespace Strava2ExcelWebApiBackend.Models
 {
-    public class StravaService
+    public class StravaService : IStravaService
     {
-        public static async Task<List<Activity>> GetActivitiesFromStrava(string accessToken)
+        private readonly StravaDbContext _context;
+
+        public StravaService(StravaDbContext context)
+        {
+            _context = context;
+        }
+
+
+        public async Task<List<Activity>> GetActivitiesFromStrava(string accessToken)
         {
             List<Activity> allActivities = new List<Activity>();
             int page = 1;
@@ -53,35 +64,35 @@ namespace Strava2ExcelWebApiBackend.Models
                         {
                             Activity formattedActivity = new Activity();
 
-                            formattedActivity.name = activity.name;
-                            formattedActivity.distance = activity.distance;
-                            formattedActivity.type = activity.type;
-                            formattedActivity.start_date = DateTime.ParseExact(activity.start_date_local.ToString("yyyy-MM-dd HH:mm:ss"), "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-                            formattedActivity.moving_time = int.Parse(TimeSpan.FromSeconds(activity.moving_time).ToString(@"hh\:mm\:ss").Split(':')[0]); // Assuming moving_time is in hours
+                            formattedActivity.Name = activity.Name;
+                            formattedActivity.Distance = activity.Distance;
+                            formattedActivity.Type = activity.Type;
+                            formattedActivity.StartDate = DateTime.ParseExact(activity.StartDateLocal.ToString(), "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                            formattedActivity.MovingTime = int.Parse(TimeSpan.FromSeconds(activity.MovingTime).ToString(@"hh\:mm\:ss").Split(':')[0]); // Assuming moving_time is in hours
 
-                            if (activity.type == "Ride")
+                            if (activity.Type == "Ride")
                             {
                                 // Format the pace for Ride activities
-                                formattedActivity.pace = (activity.average_speed * 3.6).ToString("F2") + " km/h";
+                                formattedActivity.Pace = (activity.AverageSpeed * 3.6).ToString("F2") + " km/h";
                             }
-                            else if (activity.type == "Run")
+                            else if (activity.Type == "Run")
                             {
                                 // Format the pace for Run activities
-                                double minutesPerKm = 1.0 / (activity.average_speed * 0.06);
-                                formattedActivity.pace = TimeSpan.FromMinutes(minutesPerKm).ToString(@"mm\:ss") + " / km";
+                                double minutesPerKm = 1.0 / (activity.AverageSpeed * 0.06);
+                                formattedActivity.Pace = TimeSpan.FromMinutes(minutesPerKm).ToString(@"mm\:ss") + " / km";
                             }
-                            else if (activity.type == "Swim")
+                            else if (activity.Type == "Swim")
                             {
                                 // Format the pace for Swim activities
-                                double timePer100Meters = 100.0 / activity.average_speed;
+                                double timePer100Meters = 100.0 / activity.AverageSpeed;
                                 int min = (int)(timePer100Meters / 60);
                                 int sec = (int)(timePer100Meters % 60);
-                                formattedActivity.pace = $"{min}:{sec} / 100 meters";
+                                formattedActivity.Pace = $"{min}:{sec} / 100 meters";
                             }
 
-                            formattedActivity.average_heartrate = activity.average_heartrate;
-                            formattedActivity.max_heartrate = activity.max_heartrate;
-                            formattedActivity.total_elevation_gain = activity.total_elevation_gain;
+                            formattedActivity.AverageHeartrate = activity.AverageHeartrate;
+                            formattedActivity.MaxHeartrate = activity.MaxHeartrate;
+                            formattedActivity.TotalElevationGain = activity.TotalElevationGain;
 
                             formattedActivities.Add(formattedActivity);
                         }
@@ -132,6 +143,43 @@ namespace Strava2ExcelWebApiBackend.Models
 
             return allActivities;
         }
+
+        public async Task<bool> SaveActivity(Activity activity)
+        {
+            // Validate user and save activity logic here
+            // Example:
+            //var user = await _context.Athletes.FindAsync(activity.UserId);
+            //if (user == null)
+            //{
+            //    throw new Exception("User not found.");
+            //}
+
+            _context.Activities.Add(activity);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+
+        //public async Task<List<Activity>> FetchAndSaveActivities(string accessToken)
+        //{
+        //    var activities = await GetActivitiesFromStrava(accessToken);
+
+        //    if (activities.Count > 0)
+        //    {
+        //        bool success = await SaveActivities(activities);
+        //        if (!success)
+        //        {
+        //            throw new Exception("Failed to save activities to the database.");
+        //        }
+        //    }
+
+        //    return activities;
+        //}
+
+
+
+        // method GetActivitiesFromStrava and then update database
+
 
     }
 }

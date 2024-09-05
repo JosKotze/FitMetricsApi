@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Strava2ExcelWebApiBackend.Models;
+using Microsoft.EntityFrameworkCore;
+using Strava2ExcelWebApiBackend.Data;
+using FitmetricModel = Strava2ExcelWebApiBackend.Models;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using Strava2ExcelWebApiBackend.Models;
+using Strava2ExcelWebApiBackend.Interfaces;
 
 namespace Strava2ExcelWepApiBackend.Controllers
 {
@@ -10,19 +13,21 @@ namespace Strava2ExcelWepApiBackend.Controllers
     [ApiController]
     public class ActivitiesController : ControllerBase
     {
+        private readonly IStravaService _stravaService;
+
+        public ActivitiesController(IStravaService stravaService)
+        {
+            _stravaService = stravaService;
+        }
+
         // GET: api/<ActivitiesController>
         [HttpGet]
-        public async Task<ActionResult<List<Activity>>> Get()
+        public async Task<ActionResult<List<FitmetricModel.Activity>>> GetFromStrava(string accessToken) // future: Will not need
         {
             try
             {
-                // Assuming you have an access token already available
-                string accessToken = "d910eda2ac40b7efbf08ec2d6081e10abc660fc5";
+                List<FitmetricModel.Activity> activities = await _stravaService.GetActivitiesFromStrava(accessToken);
 
-                // Call the static method from StravaService to get activities
-                List<Activity> activities = await StravaService.GetActivitiesFromStrava(accessToken);
-
-                // Return the list of activities
                 return activities;
             }
             catch (Exception ex)
@@ -32,5 +37,43 @@ namespace Strava2ExcelWepApiBackend.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] Activity activity)
+        {
+            if (activity == null)
+            {
+                return BadRequest("No activity provided.");
+            }
+
+            try
+            {
+                bool success = await _stravaService.SaveActivity(activity);
+                if (success)
+                {
+                    return Ok("Activity saved successfully.");
+                }
+                else
+                {
+                    return StatusCode(500, "Failed to save activity.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+        }
+
+
+
+        // POST: api/Activities
+        //[HttpPost]
+        //public async Task<IActionResult> Post([FromBody] FitmetricModel.Activity activity)
+        //{
+        //        //List<FitmetricModel.Activity> activities = await 
+
+        //        //return true;
+        //        // If any error occurs, return a 500 Internal Server Error with the error message
+        //}
     }
+
 }

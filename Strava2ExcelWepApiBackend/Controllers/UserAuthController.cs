@@ -1,87 +1,102 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using Strava2ExcelWebApiBackend.Data;
-using Strava2ExcelWebApiBackend.Models;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+﻿//using Microsoft.AspNetCore.Http;
+//using Microsoft.AspNetCore.Mvc;
+//using Microsoft.IdentityModel.Tokens;
+//using Strava2ExcelWebApiBackend.Data;
+//using Strava2ExcelWebApiBackend.Models;
+//using System.IdentityModel.Tokens.Jwt;
+//using System.Security.Claims;
+//using System.Text;
 
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+//using Microsoft.AspNetCore.Mvc;
+//using Microsoft.EntityFrameworkCore;
+//using Microsoft.IdentityModel.Tokens;
+//using System.IdentityModel.Tokens.Jwt;
+//using System.Security.Claims;
+//using System.Text;
+//using Strava2ExcelWebApiBackend.DTOs;
+//using System.Security.Cryptography;
+//using Strava2ExcelWebApiBackend.Interfaces;
 
-namespace Strava2ExcelWebApiBackend.Controllers
-{
-    public class UserAuthController : ControllerBase
-    {
-        private readonly StravaDbContext _context;
-        private readonly IConfiguration _configuration;
+//namespace Strava2ExcelWebApiBackend.Controllers
+//{
+//    public class UserAuthController(StravaDbContext context, IUserService userService, ITokenService tokenService) : ControllerBase
+//    {
 
-        public UserAuthController(StravaDbContext context, IConfiguration configuration)
-        {
-            _context = context;
-            _configuration = configuration;
-        }
+//        [HttpPost("register")]
+//        public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
+//        {
+//            if (await UserExists(registerDto.Username))
+//            {
+//                return BadRequest("A user with the email already exists");
+//            }
 
-        [HttpPost("signup")]
-        public async Task<IActionResult> Signup(Athlete athlete)
-        {
-            if (await _context.Athletes.AnyAsync(u => u.Email == athlete.Email))
-            {
-                return BadRequest("User already exists");
-            }
+//            using var hmac = new HMACSHA512();
 
-            var user = new Athlete
-            {
-                Name = athlete.Name,
-                Surname = athlete.Surname,              
-                AccessToken = athlete.AccessToken,
-                Email = athlete.Email,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(athlete.PasswordHash),
-                RefreshTokenCreated = DateTime.Now,
-                RefreshToken = athlete.RefreshToken,
-            };
+//            var user = new User
+//            {
+//                UserName = registerDto.Username,
+//                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
+//                PasswordSalt = hmac.Key
+//            };
 
-            _context.Athletes.Add(user);
-            await _context.SaveChangesAsync();
+//            context.Athletes.Add(user);
+//            await context.SaveChangesAsync();
 
-            return Ok(new { Token = GenerateJwtToken(user) });
-        }
+//            return new UserDto {
+//                UserName = registerDto.Username,
+//                Token = tokenService.CreateToken(user)
+//            };
+//        }
 
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login(UserDto userDto)
-        {
-            var user = await _context.Athletes.SingleOrDefaultAsync(u => u.Email == userDto.Email);
 
-            if (user == null || !BCrypt.Net.BCrypt.Verify(userDto.Password, user.PasswordHash))
-            {
-                return BadRequest("Invalid credentials");
-            }
 
-            return Ok(new { Token = GenerateJwtToken(user) });
-        }
 
-        private string GenerateJwtToken(Athlete user)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new[]
-                {
-                new Claim(ClaimTypes.Name, user.Name),
-                new Claim(ClaimTypes.Email, user.Email)
-            }),
-                Expires = DateTime.UtcNow.AddHours(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
-        }
-    }
-}
+
+//        private async Task<bool> UserExists(string email)
+//        {
+//            return await context.Athletes.AnyAsync(x => x.UserName.ToLower() == email.ToLower());
+//        }
+
+
+//        //[HttpPost("signup")]
+//        //public async Task<IActionResult> Signup([FromBody] SignupRequest request)
+//        //{
+//        //    if (await userService.CreateUserAsync(request.Name, request.Surname, request.Email, request.Password))
+//        //    {
+//        //        return Ok( new { message = "User registered successfully." });
+//        //    }
+//        //    return BadRequest( new { message = "User registration failed." });
+//        //}
+
+//        //[HttpPost("signupTest")]
+//        //public async Task<IActionResult> signupTest(string name, string surname, string email, string password)
+//        //{
+//        //    if (await userService.CreateUserAsync(name, surname, email, password))
+//        //    {
+//        //        return Ok("User registered successfully.");
+//        //    }
+//        //    return BadRequest("User registration failed.");
+//        //}
+
+//        //[HttpPost("login")]
+//        //public async Task<IActionResult> Login([FromBody] LoginRequest request)
+//        //{
+//        //    if (await userService.AuthenticateAsync(request.Email, request.Password))
+//        //    {
+//        //        return Ok( new { message = "Login successful." });
+//        //    }
+//        //    return Unauthorized(new { message = "Invalid username or password." });
+//        //}
+
+//        //[HttpPost("loginTest")]
+//        //public async Task<IActionResult> LoginTest(string email, string password)
+//        //{
+//        //    if (await userService.AuthenticateAsync(email, password))
+//        //    {
+//        //        return Ok("Login successful.");
+//        //    }
+//        //    return Unauthorized("Invalid username or password.");
+//        //}
+//    }
+//}
