@@ -6,8 +6,8 @@ namespace Strava2ExcelWebApiBackend.Interfaces
 {
     public interface IStravaService
     {
-        Task<List<Activity>> GetActivitiesFromStrava(string accessToken);
-        Task<bool> SaveActivity(Activity activities);
+        Task<List<StravaActivityData>> GetActivitiesFromStrava(string accessToken);
+        //Task<bool> SaveActivity(StravaActivityData activities);
         //Task<List<Activity>> FetchAndSaveActivities(string accessToken);
     }
 }

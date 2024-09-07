@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 using Strava2ExcelWebApiBackend.Models;
 using Strava2ExcelWebApiBackend.Interfaces;
 using Newtonsoft.Json;
+using Strava2ExcelWebApiBackend.Controllers;
 
 namespace Strava2ExcelWepApiBackend.Controllers
 {
-    public class ActivitiesController(StravaDbContext context, IStravaService stravaService) : ControllerBase
+    public class ActivitiesController(StravaDbContext context, IStravaService stravaService) : BaseApiController
     {
         //private readonly IStravaService _stravaService;
 
@@ -21,11 +22,11 @@ namespace Strava2ExcelWepApiBackend.Controllers
 
         // GET: api/<ActivitiesController>
         [HttpGet("getActivitiesFromStrava")]
-        public async Task<ActionResult<List<FitmetricModel.Activity>>> GetActivitiesFromStrava(string accessToken) // future: Will not need
+        public async Task<ActionResult<List<FitmetricModel.StravaActivityData>>> GetActivitiesFromStrava(string accessToken) // future: Will not need
         {
             try
             {
-                List<FitmetricModel.Activity> activities = await stravaService.GetActivitiesFromStrava(accessToken);
+                List<FitmetricModel.StravaActivityData> activities = await stravaService.GetActivitiesFromStrava(accessToken);
 
                 return activities;
             }
@@ -51,27 +52,64 @@ namespace Strava2ExcelWepApiBackend.Controllers
             }
         }
 
-        [HttpPost("saveActivities")]
-        public async Task<ActionResult<Activity>> SaveActivities([FromBody] List<Activity> activities)
+        [HttpPost("saveActivitiesFromStrava")]
+        public async Task<ActionResult> SaveActivitiesFromStrava(string accessToken)
         {
-            if (activities == null)
-            {
-                return BadRequest("No activity provided.");
-            }
-
             try
             {
-                foreach (var activity in activities)
+                // Fetch activities from Strava
+                List<StravaActivityData> stravaActivities = await stravaService.GetActivitiesFromStrava(accessToken);
+
+                // Map StravaActivityData to Activity
+                var activitiesToSave = stravaActivities.Select(activity => new Activity
                 {
-                    await context.Activities.AddAsync(activity);
-                }
+                    Name = activity.Name,
+                    Distance = activity.Distance,
+                    MovingTime = activity.MovingTime,
+                    TotalElevationGain = activity.TotalElevationGain,
+                    Type = activity.Type,
+                    StartDate = activity.StartDate,
+                    StartDateLocal = activity.StartDateLocal,
+                    Timezone = activity.Timezone,
+                    UtcOffset = activity.UtcOffset,
+                    LocationCity = activity.LocationCity,
+                    LocationState = activity.LocationState,
+                    LocationCountry = activity.LocationCountry,
+                    AchievementCount = activity.AchievementCount,
+                    AverageSpeed = activity.AverageSpeed,
+                    MaxSpeed = activity.MaxSpeed,
+                    AverageWatts = activity.AverageWatts,
+                    Kilojoules = activity.Kilojoules,
+                    DeviceWatts = activity.DeviceWatts,
+                    AverageHeartrate = activity.AverageHeartrate,
+                    MaxHeartrate = activity.MaxHeartrate,
+                    UserId = activity.UserId // Ensure this is properly mapped
+                }).ToList();
+
+                // Save mapped activities to the database
+                await context.Activities.AddRangeAsync(activitiesToSave);
                 await context.SaveChangesAsync();
-                return Ok(activities);
+
+                return Ok("Activities successfully saved to the database.");
             }
             catch (Exception ex)
             {
                 var innerException = ex.InnerException != null ? ex.InnerException.Message : "No inner exception";
                 return StatusCode(500, $"An error occurred: {ex.Message}. Inner exception: {innerException}");
+            }
+        }
+
+        [HttpGet("getSavedActivities")]
+        public async Task<ActionResult<List<Activity>>> GetSavedActivities()
+        {
+            try
+            {
+                var activities = await context.Activities.ToListAsync();
+                return Ok(activities);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
             }
         }
 

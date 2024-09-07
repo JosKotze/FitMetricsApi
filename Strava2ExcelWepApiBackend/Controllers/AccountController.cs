@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Strava2ExcelWebApiBackend.Controllers
 {
-    public class AccountsController(StravaDbContext context, ITokenService tokenService) : BaseApiController
+    public class AccountController(StravaDbContext context, ITokenService tokenService) : BaseApiController
     {
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)

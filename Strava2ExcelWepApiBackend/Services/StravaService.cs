@@ -30,9 +30,9 @@ namespace Strava2ExcelWebApiBackend.Models
         }
 
 
-        public async Task<List<Activity>> GetActivitiesFromStrava(string accessToken)
+        public async Task<List<StravaActivityData>> GetActivitiesFromStrava(string accessToken)
         {
-            List<Activity> allActivities = new List<Activity>();
+            List<StravaActivityData> allActivities = new List<StravaActivityData>();
             int page = 1;
             int perPage = 200; // 200 is max we can get from strava
 
@@ -50,7 +50,7 @@ namespace Strava2ExcelWebApiBackend.Models
                     if (response.IsSuccessStatusCode)
                     {
                         string responseBody = await response.Content.ReadAsStringAsync();
-                        List<Activity> activities = JsonConvert.DeserializeObject<List<Activity>>(responseBody);
+                        List<StravaActivityData> activities = JsonConvert.DeserializeObject<List<StravaActivityData>>(responseBody);
 
                         if (activities.Count == 0)
                         {
@@ -59,10 +59,10 @@ namespace Strava2ExcelWebApiBackend.Models
                         }
 
                         // Format the activities before adding them to the list
-                        List<Activity> formattedActivities = new List<Activity>();
+                        List<StravaActivityData> formattedActivities = new List<StravaActivityData>();
                         foreach (var activity in activities)
                         {
-                            Activity formattedActivity = new Activity();
+                            StravaActivityData formattedActivity = new StravaActivityData();
 
                             formattedActivity.Name = activity.Name;
                             formattedActivity.Distance = activity.Distance;
@@ -144,20 +144,81 @@ namespace Strava2ExcelWebApiBackend.Models
             return allActivities;
         }
 
-        public async Task<bool> SaveActivity(Activity activity)
+        private Activity MapToActivity(StravaActivityData stravaActivity)
         {
-            // Validate user and save activity logic here
-            // Example:
-            //var user = await _context.Athletes.FindAsync(activity.UserId);
-            //if (user == null)
-            //{
-            //    throw new Exception("User not found.");
-            //}
+            var activity = new Activity
+            {
+                Name = stravaActivity.Name,
+                Distance = stravaActivity.Distance,
+                Type = stravaActivity.Type,
+                MovingTime = stravaActivity.MovingTime,
+                TotalElevationGain = stravaActivity.TotalElevationGain,
+                AverageSpeed = stravaActivity.AverageSpeed,
+                MaxSpeed = stravaActivity.MaxSpeed,
+                AverageWatts = stravaActivity.AverageWatts,
+                Kilojoules = stravaActivity.Kilojoules,
+                AverageHeartrate = stravaActivity.AverageHeartrate,
+                MaxHeartrate = stravaActivity.MaxHeartrate,
+                UserId = stravaActivity.UserId,
+                Timezone = stravaActivity.Timezone,
+                UtcOffset = stravaActivity.UtcOffset,
+                LocationCity = stravaActivity.LocationCity,
+                LocationState = stravaActivity.LocationState,
+                LocationCountry = stravaActivity.LocationCountry,
+                AchievementCount = stravaActivity.AchievementCount,
+                StartDate = ParseDate(stravaActivity.StartDate),
+                StartDateLocal = ParseDate(stravaActivity.StartDateLocal)
+            };
 
-            _context.Activities.Add(activity);
-            await _context.SaveChangesAsync();
-            return true;
+            // Calculate and format pace based on activity type
+            activity.Pace = CalculatePace(stravaActivity.Type, stravaActivity.AverageSpeed);
+
+            return activity;
         }
+
+        private DateTime? ParseDate(DateTime? date)
+        {
+            if (date.HasValue && date != default(DateTime))
+            {
+                return date;
+            }
+            return null; // Return null if date is invalid or empty
+        }
+
+        private string? CalculatePace(string? type, double averageSpeed)
+        {
+            if (type == "Ride")
+            {
+                return $"{(averageSpeed * 3.6):F2} km/h";
+            }
+            else if (type == "Run")
+            {
+                double minutesPerKm = 1.0 / (averageSpeed * 0.06);
+                return TimeSpan.FromMinutes(minutesPerKm).ToString(@"mm\:ss") + " / km";
+            }
+            else if (type == "Swim")
+            {
+                double timePer100Meters = 100.0 / averageSpeed;
+                int min = (int)(timePer100Meters / 60);
+                int sec = (int)(timePer100Meters % 60);
+                return $"{min}:{sec:D2} / 100 meters";
+            }
+            return null; // Return null for unsupported activity types
+        }
+        //public async Task<bool> SaveActivity(StravaActivityData activity)
+        //{
+        //    // Validate user and save activity logic here
+        //    // Example:
+        //    //var user = await _context.Athletes.FindAsync(activity.UserId);
+        //    //if (user == null)
+        //    //{
+        //    //    throw new Exception("User not found.");
+        //    //}
+
+        //    _context.Activities.Add(activity);
+        //    await _context.SaveChangesAsync();
+        //    return true;
+        //}
 
 
         //public async Task<List<Activity>> FetchAndSaveActivities(string accessToken)
