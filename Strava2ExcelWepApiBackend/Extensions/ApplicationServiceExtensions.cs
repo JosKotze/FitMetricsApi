@@ -14,6 +14,8 @@ namespace Strava2ExcelWebApiBackend.Extensions
 
             services.AddControllers();
 
+            services.AddHttpClient();
+
             services.AddDbContext<StravaDbContext>(options =>
             {
                 options.UseSqlServer(config.GetConnectionString("DefaultConnection"));

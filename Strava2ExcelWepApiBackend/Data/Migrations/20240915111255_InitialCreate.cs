@@ -17,10 +17,13 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    ActivityId = table.Column<long>(type: "bigint", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
                     Pace = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Distance = table.Column<double>(type: "float", nullable: false),
                     MovingTime = table.Column<int>(type: "int", nullable: false),
+                    ElapsedTime = table.Column<int>(type: "int", nullable: false),
                     TotalElevationGain = table.Column<double>(type: "float", nullable: false),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -31,14 +34,36 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
                     LocationState = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LocationCountry = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AchievementCount = table.Column<int>(type: "int", nullable: true),
+                    KudosCount = table.Column<int>(type: "int", nullable: true),
+                    Commentount = table.Column<int>(type: "int", nullable: true),
+                    AthleteCount = table.Column<int>(type: "int", nullable: true),
+                    PhotoCount = table.Column<int>(type: "int", nullable: true),
+                    Trainer = table.Column<bool>(type: "bit", nullable: true),
+                    Commute = table.Column<bool>(type: "bit", nullable: true),
+                    Manual = table.Column<bool>(type: "bit", nullable: true),
+                    Private = table.Column<bool>(type: "bit", nullable: true),
+                    Visibility = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Flagged = table.Column<bool>(type: "bit", nullable: true),
+                    GearId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StartLatlng = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EndLatlng = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AverageSpeed = table.Column<double>(type: "float", nullable: false),
                     MaxSpeed = table.Column<double>(type: "float", nullable: false),
                     AverageWatts = table.Column<double>(type: "float", nullable: true),
+                    MaxWatts = table.Column<double>(type: "float", nullable: true),
+                    WeightedAverageWatts = table.Column<double>(type: "float", nullable: true),
                     Kilojoules = table.Column<double>(type: "float", nullable: true),
                     DeviceWatts = table.Column<bool>(type: "bit", nullable: true),
+                    HasHeartrate = table.Column<bool>(type: "bit", nullable: false),
                     AverageHeartrate = table.Column<double>(type: "float", nullable: true),
                     MaxHeartrate = table.Column<double>(type: "float", nullable: true),
-                    UserId = table.Column<int>(type: "int", nullable: false)
+                    ElevHigh = table.Column<double>(type: "float", nullable: true),
+                    ElevLow = table.Column<double>(type: "float", nullable: true),
+                    PrCount = table.Column<int>(type: "int", nullable: false),
+                    UploadId = table.Column<long>(type: "bigint", nullable: true),
+                    ExternalId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TotalPhotoCount = table.Column<int>(type: "int", nullable: false),
+                    HasKudoed = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -69,8 +94,6 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Athletes");
-            migrationBuilder.DropTable(
-                name: "Map");
         }
     }
 }

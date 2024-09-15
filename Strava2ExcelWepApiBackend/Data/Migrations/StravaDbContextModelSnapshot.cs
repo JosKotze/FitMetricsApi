@@ -33,6 +33,12 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
                     b.Property<int?>("AchievementCount")
                         .HasColumnType("int");
 
+                    b.Property<long>("ActivityId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int?>("AthleteCount")
+                        .HasColumnType("int");
+
                     b.Property<double?>("AverageHeartrate")
                         .HasColumnType("float");
 
@@ -42,14 +48,50 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
                     b.Property<double?>("AverageWatts")
                         .HasColumnType("float");
 
+                    b.Property<int?>("Commentount")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("Commute")
+                        .HasColumnType("bit");
+
                     b.Property<bool?>("DeviceWatts")
                         .HasColumnType("bit");
 
                     b.Property<double>("Distance")
                         .HasColumnType("float");
 
+                    b.Property<int>("ElapsedTime")
+                        .HasColumnType("int");
+
+                    b.Property<double?>("ElevHigh")
+                        .HasColumnType("float");
+
+                    b.Property<double?>("ElevLow")
+                        .HasColumnType("float");
+
+                    b.Property<string>("EndLatlng")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ExternalId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("Flagged")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("GearId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("HasHeartrate")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("HasKudoed")
+                        .HasColumnType("bit");
+
                     b.Property<double?>("Kilojoules")
                         .HasColumnType("float");
+
+                    b.Property<int?>("KudosCount")
+                        .HasColumnType("int");
 
                     b.Property<string>("LocationCity")
                         .HasColumnType("nvarchar(max)");
@@ -60,10 +102,16 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
                     b.Property<string>("LocationState")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool?>("Manual")
+                        .HasColumnType("bit");
+
                     b.Property<double?>("MaxHeartrate")
                         .HasColumnType("float");
 
                     b.Property<double>("MaxSpeed")
+                        .HasColumnType("float");
+
+                    b.Property<double?>("MaxWatts")
                         .HasColumnType("float");
 
                     b.Property<int>("MovingTime")
@@ -75,11 +123,23 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
                     b.Property<string>("Pace")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("PhotoCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PrCount")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("Private")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime?>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("StartDateLocal")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("StartLatlng")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Timezone")
                         .HasColumnType("nvarchar(max)");
@@ -87,13 +147,28 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
                     b.Property<double>("TotalElevationGain")
                         .HasColumnType("float");
 
+                    b.Property<int>("TotalPhotoCount")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("Trainer")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Type")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("UploadId")
+                        .HasColumnType("bigint");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.Property<double?>("UtcOffset")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Visibility")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double?>("WeightedAverageWatts")
                         .HasColumnType("float");
 
                     b.HasKey("Id");

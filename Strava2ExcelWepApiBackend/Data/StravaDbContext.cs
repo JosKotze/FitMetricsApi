@@ -3,6 +3,7 @@ using FitmetricModel = Strava2ExcelWebApiBackend.Models;
 using System.Data;
 using System.Diagnostics;
 using System.Xml;
+using System.Text.Json;
 
 // command for db context update:
 // dotnet ef migrations add InitialCreate -o Data/Migrations
@@ -28,8 +29,7 @@ namespace Strava2ExcelWebApiBackend.Data
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Id)
-                      .ValueGeneratedOnAdd(); // Ensure this is set
-                                              // Configure other properties and relationships as needed
+                      .ValueGeneratedOnAdd();
             });
         }
 
