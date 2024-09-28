@@ -10,33 +10,35 @@ using Newtonsoft.Json;
 using Strava2ExcelWebApiBackend.Controllers;
 using System.Diagnostics;
 using Microsoft.IdentityModel.Tokens;
+using Azure.Core;
 
 namespace Strava2ExcelWepApiBackend.Controllers
 {
     public class ActivitiesController(StravaDbContext context, IStravaService stravaService) : BaseApiController
     {
-        //private readonly IStravaService _stravaService;
 
-        //public ActivitiesController(IStravaService stravaService)
-        //{
-        //    _stravaService = stravaService;
-        //}
+        [HttpPost("syncActivities")]
+        public async Task<IActionResult> SyncActivities(int userId, string accessToken)
+        {
+            try
+            {
+                //var accessToken = GetAccessTokenForUser(userId);  // Implement this method as per your authentication flow
 
-        // GET: api/<ActivitiesController>
-        //[HttpGet("getActivitiesFromStrava")]
-        //public async Task<ActionResult<List<FitmetricModel.StravaActivityData>>> GetActivitiesFromStrava(string accessToken) // future: Will not need
-        //{
-        //    try
-        //    {
-        //        List<FitmetricModel.StravaActivityData> activities = await stravaService.GetActivitiesFromStrava(accessToken);
+                if (string.IsNullOrEmpty(accessToken))
+                {
+                    return Unauthorized("Access token is missing or invalid.");
+                }
 
-        //        return activities;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, $"An error occurred: {ex.Message}");
-        //    }
-        //}
+                // Call your method to sync activities with the database
+                await stravaService.SyncActivitiesWithDatabaseAsync(accessToken, userId);
+
+                return Ok(new { message = "Activities synced successfully." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error syncing activities: {ex.Message}");
+            }
+        }
 
         [HttpGet("getActivitiesFromFitMetrics")]
         public async Task<ActionResult<List<FitmetricModel.Activity>>> GetActivitiesFromFitMetrics() // future: Will not need
