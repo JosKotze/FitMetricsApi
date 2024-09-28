@@ -567,7 +567,6 @@ namespace Strava2ExcelWebApiBackend.Models
 
 
 
-        //// method GetActivitiesFromStrava and then update database
 
 
     }

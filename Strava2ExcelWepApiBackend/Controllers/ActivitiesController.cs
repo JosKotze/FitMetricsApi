@@ -68,6 +68,62 @@ namespace Strava2ExcelWepApiBackend.Controllers
             }
         }
 
+        [HttpGet("geActivitiesByType")]
+        public async Task<ActionResult<IEnumerable<FitmetricModel.Activity>>> GetRunActivities(string type, int userId)
+        {
+            try
+            {
+                var activities = await context.Activities.Where(x => x.Type == type && x.UserId == userId).ToListAsync();
+                return Ok(activities);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+        }
+
+        //[HttpGet("getRideActivities")]
+        //public async Task<ActionResult<IEnumerable<FitmetricModel.Activity>>> GetRideActivities(int userId)
+        //{
+        //    try
+        //    {
+        //        var activities = await context.Activities.Where(x => x.Type == "Ride" && x.UserId == userId).ToListAsync();
+        //        return Ok(activities);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, $"An error occurred: {ex.Message}");
+        //    }
+        //}
+
+        //[HttpGet("getSwimActivities")]
+        //public async Task<ActionResult<IEnumerable<FitmetricModel.Activity>>> GetSwimActivities(int userId)
+        //{
+        //    try
+        //    {
+        //        var activities = await context.Activities.Where(x => x.Type == "Swim" && x.UserId == userId).ToListAsync();
+        //        return Ok(activities);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, $"An error occurred: {ex.Message}");
+        //    }
+        //}
+
+        //[HttpGet("getHikeActivities")]
+        //public async Task<ActionResult<IEnumerable<FitmetricModel.Activity>>> GetHikeActivities(int userId)
+        //{
+        //    try
+        //    {
+        //        var activities = await context.Activities.Where(x => x.Type == "Hike" && x.UserId == userId).ToListAsync();
+        //        return Ok(activities);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, $"An error occurred: {ex.Message}");
+        //    }
+        //}
+
         //[HttpPost("saveActivitiesFromStrava")]
         //public async Task<ActionResult> SaveActivitiesFromStrava(string accessToken)
         //{
