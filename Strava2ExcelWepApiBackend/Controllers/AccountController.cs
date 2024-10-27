@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Strava2ExcelWebApiBackend.Data;
 using Strava2ExcelWebApiBackend.DTOs;
@@ -60,6 +61,22 @@ namespace Strava2ExcelWebApiBackend.Controllers
                 Token = tokenService.CreateToken(user)
             };
         }
+
+        //[HttpGet("startup")]
+        //public IActionResult GetStartupData(string userName)
+        //{
+        //    accessToken = context.StravaAuth.FirstOrDefaultAsync(x => x.);
+
+        //    var startupData = new Startup
+        //    {
+        //        UserId = 
+        //        UserName = 
+        //        AccessToken = 
+        //        // Any other startup-related data
+        //    };
+
+            
+        //}
 
 
         private async Task<bool> UserExists(string username)

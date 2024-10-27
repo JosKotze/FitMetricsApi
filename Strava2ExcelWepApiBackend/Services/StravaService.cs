@@ -67,24 +67,24 @@ namespace Strava2ExcelWebApiBackend.Models
 
                         // Check if the activity already exists in the database
                         var existingActivity = await context.Activities
-                            .FirstOrDefaultAsync(a => a.Id == mappedActivity.Id);
+                            .FirstOrDefaultAsync(a => a.ActivityId == mappedActivity.ActivityId && a.UserId == userId);
 
                         if (existingActivity == null)
                         {
                             // New activity, so add it to the database
                             context.Activities.Add(mappedActivity);
                         }
-                        else
-                        {
-                            // Optionally update the existing activity, if necessary
-                            existingActivity.Name = mappedActivity.Name;
-                            existingActivity.Distance = mappedActivity.Distance;
-                            existingActivity.MovingTime = mappedActivity.MovingTime;
-                            existingActivity.TotalElevationGain = mappedActivity.TotalElevationGain;
-                            existingActivity.Pace = mappedActivity.Pace;
+                        //else
+                        //{
+                        //    // Optionally update the existing activity, if necessary
+                        //    existingActivity.Name = mappedActivity.Name;
+                        //    existingActivity.Distance = mappedActivity.Distance;
+                        //    existingActivity.MovingTime = mappedActivity.MovingTime;
+                        //    existingActivity.TotalElevationGain = mappedActivity.TotalElevationGain;
+                        //    existingActivity.Pace = mappedActivity.Pace;
 
-                            context.Activities.Update(existingActivity);
-                        }
+                        //    context.Activities.Update(existingActivity);
+                        //}
                     }
 
                     page++;  // Move to the next page of activities
@@ -170,6 +170,7 @@ namespace Strava2ExcelWebApiBackend.Models
             return new Activity
             {
                 Pace = CalculatePace(stravaActivity.type, stravaActivity.average_speed),
+                ActivityId = stravaActivity.id,
                 Name = stravaActivity.name,
                 Distance = stravaActivity.distance,
                 MovingTime = stravaActivity.moving_time,
