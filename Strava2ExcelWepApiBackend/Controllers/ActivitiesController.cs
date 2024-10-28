@@ -49,6 +49,20 @@ namespace Strava2ExcelWepApiBackend.Controllers
             }
         }
 
+        [HttpGet("getActivityByTypeByYear")]
+        public async Task<ActionResult<List<FitmetricModel.Activity>>> GetActivityByTypeByYear(int year, string type, int userId)
+        {
+            try
+            {
+                var activities = await context.Activities.Where(x => x.StartDate.Value.Year == year && x.Type == type && x.UserId == userId).ToListAsync();
+                return Ok(activities);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+        }
+
         [HttpGet("getPagedActivities")]
         public async Task<ActionResult<IEnumerable<FitmetricModel.Activity>>> GetPagedActivities([FromQuery] ActivityParams activityParams)
         {
