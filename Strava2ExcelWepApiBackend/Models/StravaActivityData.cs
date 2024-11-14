@@ -56,8 +56,4 @@
         public bool has_kudoed { get; set; }
         public int UserId { get; set; }
     }
-
-    public class Map
-    {
-    }
 }

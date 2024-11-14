@@ -12,6 +12,34 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Athletes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Athletes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Map",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    SummaryPolyline = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ResourceState = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Map", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Activities",
                 columns: table => new
                 {
@@ -63,27 +91,23 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
                     UploadId = table.Column<long>(type: "bigint", nullable: true),
                     ExternalId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TotalPhotoCount = table.Column<int>(type: "int", nullable: false),
-                    HasKudoed = table.Column<bool>(type: "bit", nullable: false)
+                    HasKudoed = table.Column<bool>(type: "bit", nullable: false),
+                    MapId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Activities", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Activities_Map_MapId",
+                        column: x => x.MapId,
+                        principalTable: "Map",
+                        principalColumn: "Id");
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Athletes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
-                    PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Athletes", x => x.Id);
-                });
+            migrationBuilder.CreateIndex(
+                name: "IX_Activities_MapId",
+                table: "Activities",
+                column: "MapId");
         }
 
         /// <inheritdoc />
@@ -94,6 +118,9 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Athletes");
+
+            migrationBuilder.DropTable(
+                name: "Map");
         }
     }
 }

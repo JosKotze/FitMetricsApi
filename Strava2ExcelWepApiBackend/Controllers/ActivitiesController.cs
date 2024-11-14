@@ -18,6 +18,27 @@ namespace Strava2ExcelWepApiBackend.Controllers
 {
     public class ActivitiesController(StravaDbContext context, IStravaService stravaService) : BaseApiController
     {
+        [HttpGet("{activityId}")]
+        public async Task<IActionResult> GetActivityById(long activityId)
+        {
+            try
+            {
+                // Call the GetActivityByIdAsync function to fetch activity from Strava
+                var activity = stravaService.GetActivityByIdAsync(activityId);
+
+                if (activity == null)
+                {
+                    return NotFound(new { message = "Activity not found." });
+                }
+
+                return Ok(activity);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
         [HttpGet("syncActivities")]
         public async Task<ActionResult> SyncActivities(int userId, string accessToken)
         {
@@ -54,7 +75,8 @@ namespace Strava2ExcelWepApiBackend.Controllers
         {
             try
             {
-                var activities = await context.Activities.Where(x => x.StartDate.Value.Year == year && x.Type == type && x.UserId == userId).ToListAsync();
+                var activities = await context.Activities.
+                    Where(x => x.StartDate.Value.Year == year && x.Type == type && x.UserId == userId).OrderBy(x => x.StartDate).ToListAsync();
                 return Ok(activities);
             }
             catch (Exception ex)

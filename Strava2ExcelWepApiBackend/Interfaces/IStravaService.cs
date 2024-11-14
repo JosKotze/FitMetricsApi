@@ -1,4 +1,6 @@
-﻿using Strava2ExcelWebApiBackend.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using Strava2ExcelWebApiBackend.DTOs;
+using Strava2ExcelWebApiBackend.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -10,6 +12,8 @@ namespace Strava2ExcelWebApiBackend.Interfaces
         Activity MapToActivity(StravaActivityData activity, int userId);
         Task SaveStravaActivitiesAsync(List<StravaActivityData> stravaActivities, int userId);
         Task SyncActivitiesWithDatabaseAsync(string accessToken, int userId);
+
+        Task<string> GetActivityByIdAsync(long activityId);
     }
 
     //public interface IStravaService

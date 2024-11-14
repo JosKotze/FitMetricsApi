@@ -33,6 +33,32 @@ namespace Strava2ExcelWebApiBackend.Models
             this.httpClientFactory = httpClientFactory;
         }
 
+        public async Task<string> GetActivityByIdAsync(long activityId)
+        {
+            // Convert the activity ID to a string for use in the URL
+            string activityIdStr = activityId.ToString();
+            string url = $"https://www.strava.com/api/v3/athlete/activities/{activityIdStr}";
+
+            //52f047de4d95298dd263516a851f467e77aa687e
+
+            using (var httpClient = httpClientFactory.CreateClient())
+            {
+                httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", "52f047de4d95298dd263516a851f467e77aa687e");
+
+                var response = await httpClient.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var activity = await response.Content.ReadAsStringAsync();
+                    return activity;
+                }
+
+                // If the response is not successful, return null
+                return null;
+            }
+        }
+
+
         public async Task SyncActivitiesWithDatabaseAsync(string accessToken, int userId)
         {
             List<StravaActivityData> allActivities = new List<StravaActivityData>();
@@ -215,7 +241,8 @@ namespace Strava2ExcelWebApiBackend.Models
                 ExternalId = stravaActivity.external_id,
                 TotalPhotoCount = stravaActivity.total_photo_count,
                 HasKudoed = stravaActivity.has_kudoed,
-                UserId = userId
+                Map = stravaActivity.map,
+                UserId = userId,
             };
         }
 

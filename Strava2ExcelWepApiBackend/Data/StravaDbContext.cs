@@ -4,6 +4,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Xml;
 using System.Text.Json;
+using Strava2ExcelWebApiBackend.Models;
 
 // command for db context update:
 // dotnet ef migrations add InitialCreate -o Data/Migrations
@@ -30,7 +31,15 @@ namespace Strava2ExcelWebApiBackend.Data
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Id)
                       .ValueGeneratedOnAdd();
+
+                entity.Property(a => a.Map)
+                      .HasConversion(
+                          v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
+                          v => JsonSerializer.Deserialize<Map>(v, (JsonSerializerOptions)null))
+                      .HasColumnType("nvarchar(max)") // Ensure the column type can store JSON
+                      .IsRequired(false); // Allow NULLs if Map is optional
             });
+
         }
 
     }

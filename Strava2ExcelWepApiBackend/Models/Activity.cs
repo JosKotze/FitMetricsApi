@@ -50,6 +50,8 @@
         public string? ExternalId { get; set; }
         public int TotalPhotoCount { get; set; }
         public bool HasKudoed { get; set; }
+
+        public Map? Map { get; set; }
     }
 
 }

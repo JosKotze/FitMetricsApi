@@ -12,7 +12,7 @@ using Strava2ExcelWebApiBackend.Data;
 namespace Strava2ExcelWebApiBackend.Data.Migrations
 {
     [DbContext(typeof(StravaDbContext))]
-    [Migration("20240915111255_InitialCreate")]
+    [Migration("20241113162814_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -108,6 +108,9 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
                     b.Property<bool?>("Manual")
                         .HasColumnType("bit");
 
+                    b.Property<string>("MapId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<double?>("MaxHeartrate")
                         .HasColumnType("float");
 
@@ -176,7 +179,29 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("MapId");
+
                     b.ToTable("Activities");
+                });
+
+            modelBuilder.Entity("Strava2ExcelWebApiBackend.Models.Map", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)")
+                        .HasAnnotation("Relational:JsonPropertyName", "id");
+
+                    b.Property<int>("ResourceState")
+                        .HasColumnType("int")
+                        .HasAnnotation("Relational:JsonPropertyName", "resource_state");
+
+                    b.Property<string>("SummaryPolyline")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasAnnotation("Relational:JsonPropertyName", "summary_polyline");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Map");
                 });
 
             modelBuilder.Entity("Strava2ExcelWebApiBackend.Models.User", b =>
@@ -202,6 +227,15 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Athletes");
+                });
+
+            modelBuilder.Entity("Strava2ExcelWebApiBackend.Models.Activity", b =>
+                {
+                    b.HasOne("Strava2ExcelWebApiBackend.Models.Map", "Map")
+                        .WithMany()
+                        .HasForeignKey("MapId");
+
+                    b.Navigation("Map");
                 });
 #pragma warning restore 612, 618
         }
