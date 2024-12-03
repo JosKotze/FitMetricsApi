@@ -19,8 +19,6 @@ using Microsoft.Extensions.Configuration;
 using Azure.Core;
 // we are using EPPlus nuget package
 
-
-
 namespace Strava2ExcelWebApiBackend.Models
 {
     public class StravaService : IStravaService
@@ -64,40 +62,21 @@ namespace Strava2ExcelWebApiBackend.Models
 
         public async Task<List<long>> GetActivityIdsByUserIdAsync(int userId)
         {
-            // Using LINQ to query the database
             var activityIds = await context.Activities
-                .Where(a => a.UserId == userId) // Filter by UserId
-                .Select(a => a.ActivityId)     // Select only the ActivityId column
-                .ToListAsync();                // Execute the query and convert to a list
+                .Where(a => a.UserId == userId) 
+                .Select(a => a.ActivityId)   
+                .ToListAsync();               
 
             return activityIds;
         }
 
-
-        // //Method to fetch activities from Strava
-        //private async Task<List<StravaActivityData>> GetStravaActivitiesAsync()
-        //{
-        //    // Your logic to call Strava API and fetch basic activities
-        //    // Example:
-        //    return await GetActivitiesAsync();
-        //}
-
-        // //Method to fetch activity details from Strava
-        //private async Task<StravaActivityData> GetActivityByIdAsync(long activityId)
-        //{
-        //    // Your logic to call Strava API to get additional details for a specific activity
-        //    // Example:
-        //    return await GetActivityDetailsByIdAsync(activityId);
-        //}
-
-        // Mapping method to convert StravaActivityData to Activity
         private Activity MapToActivity(StravaActivityData data, int userId)
         {
             return new Activity
             {
                 ActivityId = data.id,
                 UserId = userId,
-                //Pace = data.pace,
+                Pace = data.pace,
                 Name = data.name,
                 Distance = data.distance,
                 MovingTime = data.moving_time,
@@ -109,11 +88,19 @@ namespace Strava2ExcelWebApiBackend.Models
                 StartDateLocal = data.start_date_local,
                 Timezone = data.timezone,
                 MaxHeartrate = data.max_heartrate,
-                //Map = data.map != null ? JsonConvert.SerializeObject(data.map) : null
             };
         }
 
-        // Mapping method to convert StravaActivityData to ActivityDetails
+        private static Map MapToMap(long activityId, int userId, string polyLine)
+        {
+            return new Map
+            {
+                ActivityId = activityId,
+                UserId = userId,
+                Polyline = polyLine
+            };
+        }
+
         private ActivityDetails MapToActivityDetails(StravaActivityData data, int userId)
         {
             var activity = MapToActivity(data, userId);

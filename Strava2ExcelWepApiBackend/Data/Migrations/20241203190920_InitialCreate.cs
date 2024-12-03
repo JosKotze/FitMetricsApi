@@ -12,6 +12,32 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Activities",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ActivityId = table.Column<long>(type: "bigint", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Pace = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Distance = table.Column<double>(type: "float", nullable: false),
+                    MovingTime = table.Column<int>(type: "int", nullable: false),
+                    AverageHeartrate = table.Column<double>(type: "float", nullable: true),
+                    AverageSpeed = table.Column<double>(type: "float", nullable: false),
+                    TotalElevationGain = table.Column<double>(type: "float", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    StartDateLocal = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Timezone = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MaxHeartrate = table.Column<double>(type: "float", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Activities", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ActivityDetails",
                 columns: table => new
                 {
@@ -65,52 +91,16 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
                 name: "Maps",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    activityId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SummaryPolyline = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ResourceState = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ActivityId = table.Column<long>(type: "bigint", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Polyline = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Maps", x => x.Id);
                 });
-
-            migrationBuilder.CreateTable(
-                name: "Activities",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ActivityId = table.Column<long>(type: "bigint", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    Pace = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Distance = table.Column<double>(type: "float", nullable: false),
-                    MovingTime = table.Column<int>(type: "int", nullable: false),
-                    AverageHeartrate = table.Column<double>(type: "float", nullable: true),
-                    AverageSpeed = table.Column<double>(type: "float", nullable: false),
-                    TotalElevationGain = table.Column<double>(type: "float", nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    StartDateLocal = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Timezone = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    MaxHeartrate = table.Column<double>(type: "float", nullable: true),
-                    ActivityDetailsId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Activities", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Activities_ActivityDetails_ActivityDetailsId",
-                        column: x => x.ActivityDetailsId,
-                        principalTable: "ActivityDetails",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Activities_ActivityDetailsId",
-                table: "Activities",
-                column: "ActivityDetailsId");
         }
 
         /// <inheritdoc />
@@ -120,13 +110,13 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
                 name: "Activities");
 
             migrationBuilder.DropTable(
+                name: "ActivityDetails");
+
+            migrationBuilder.DropTable(
                 name: "Athletes");
 
             migrationBuilder.DropTable(
                 name: "Maps");
-
-            migrationBuilder.DropTable(
-                name: "ActivityDetails");
         }
     }
 }

@@ -30,9 +30,6 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("ActivityDetailsId")
-                        .HasColumnType("int");
-
                     b.Property<long>("ActivityId")
                         .HasColumnType("bigint");
 
@@ -76,8 +73,6 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ActivityDetailsId");
 
                     b.ToTable("Activities");
                 });
@@ -166,19 +161,21 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
 
             modelBuilder.Entity("Strava2ExcelWebApiBackend.Models.Map", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("ResourceState")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("SummaryPolyline")
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<long>("ActivityId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Polyline")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("activityId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -208,15 +205,6 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Athletes");
-                });
-
-            modelBuilder.Entity("Strava2ExcelWebApiBackend.Models.Activity", b =>
-                {
-                    b.HasOne("Strava2ExcelWebApiBackend.Models.ActivityDetails", "ActivityDetails")
-                        .WithMany()
-                        .HasForeignKey("ActivityDetailsId");
-
-                    b.Navigation("ActivityDetails");
                 });
 #pragma warning restore 612, 618
         }

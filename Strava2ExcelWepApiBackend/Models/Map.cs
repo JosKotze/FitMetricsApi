@@ -2,9 +2,9 @@
 {
     public class Map
     {
-        public string Id { get; set; }
-        public string activityId { get; set; }
-        public string SummaryPolyline { get; set; }
-        public int ResourceState { get; set; }
+        public int Id { get; set; }
+        public long ActivityId { get; set; }
+        public int UserId { get; set; }
+        public string Polyline { get; set; }
     }
 }

@@ -2,7 +2,7 @@
 {
     public class StravaActivityData
     {
-        public string? Pace { get; set; }
+        public string? pace { get; set; }
         public int resource_state { get; set; }
         public User? Athlete { get; set; }
         public string? name { get; set; }
