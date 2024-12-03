@@ -26,7 +26,7 @@
         public int? comment_count { get; set; }
         public int? athlete_count { get; set; }
         public int? photo_count { get; set; }
-        public Map? map { get; set; }
+        //public Map? map { get; set; }
         public bool? trainer { get; set; }
         public bool? commute { get; set; }
         public bool? manual { get; set; }

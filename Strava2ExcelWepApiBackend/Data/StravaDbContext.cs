@@ -20,7 +20,9 @@ namespace Strava2ExcelWebApiBackend.Data
         }
 
         public DbSet<FitmetricModel.Activity> Activities { get; set; }
-        public DbSet<FitmetricModel.User> Athletes { get; set; }
+        public DbSet<ActivityDetails> ActivityDetails { get; set; }
+        public DbSet<Map> Maps { get; set; }
+        public DbSet<User> Athletes { get; set; }
         public object Users { get; internal set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -31,16 +33,13 @@ namespace Strava2ExcelWebApiBackend.Data
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Id)
                       .ValueGeneratedOnAdd();
-
-                entity.Property(a => a.Map)
-                      .HasConversion(
-                          v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
-                          v => JsonSerializer.Deserialize<Map>(v, (JsonSerializerOptions)null))
-                      .HasColumnType("nvarchar(max)") // Ensure the column type can store JSON
-                      .IsRequired(false); // Allow NULLs if Map is optional
             });
+            // One-to-One relationship between Activity and ActivityDetails
+            //modelBuilder.Entity<FitmetricModel.Activity>()
+            //    .HasOne(a => a.ActivityDetails)  // Activity has one ActivityDetails
+            //    .WithOne(ad => ad.Activity)      // ActivityDetails has one Activity
+            //    .HasForeignKey<ActivityDetails>(ad => ad.ActivityId);
 
         }
-
     }
 }

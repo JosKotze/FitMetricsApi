@@ -18,24 +18,24 @@ namespace Strava2ExcelWepApiBackend.Controllers
 {
     public class ActivitiesController(StravaDbContext context, IStravaService stravaService) : BaseApiController
     {
-        [HttpGet("{activityId}")]
-        public async Task<IActionResult> GetActivityById(long activityId)
+        [HttpGet("activity/{id}")]
+        public async Task<IActionResult> GetActivity(long id, [FromQuery] bool includeAllEfforts)
         {
             try
             {
-                // Call the GetActivityByIdAsync function to fetch activity from Strava
-                var activity = stravaService.GetActivityByIdAsync(activityId);
+                var activity = await stravaService.GetActivityByIdAsync(id, includeAllEfforts);
 
                 if (activity == null)
                 {
-                    return NotFound(new { message = "Activity not found." });
+                    return NotFound();
                 }
 
                 return Ok(activity);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = ex.Message });
+                // Log or handle exceptions
+                return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
 
@@ -44,7 +44,7 @@ namespace Strava2ExcelWepApiBackend.Controllers
         {
             try
             {
-                await stravaService.SyncActivitiesWithDatabaseAsync(accessToken, userId);
+                await stravaService.SyncActivitiesWithDatabaseAsync2(accessToken, userId);
                 return Ok("Sync completed successfully.");
             }
             catch (Exception ex)
