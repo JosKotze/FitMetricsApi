@@ -16,13 +16,13 @@
         public double? ElevLow { get; set; }         // Lowest elevation point
         public string? DeviceName { get; set; }      // Name of the device used
         public string? EmbedToken { get; set; }      // Token for embedding
-        public string? SegmentEfforts { get; set; }  // JSON string for segment efforts
-        public string? SplitMetric { get; set; }     // JSON string for split metrics
+        //public List<SegmentEffort>? SegmentEffort { get; set; }
+        //public List<SplitMetric>? SplitMetric { get; set; }
         public string? Laps { get; set; }            // JSON string for laps
-        public int KudosCount { get; set; }          // Kudos received
-        public int CommentCount { get; set; }        // Comments received
-        public int AchievementCount { get; set; }    // Number of achievements
-        public int AthleteCount { get; set; }        // Number of athletes involved
+        public int? KudosCount { get; set; }          // Kudos received
+        public int? CommentCount { get; set; }        // Comments received
+        public int? AchievementCount { get; set; }    // Number of achievements
+        public int? AthleteCount { get; set; }        // Number of athletes involved
         public string? SportType { get; set; }
         public List<double>? StartLatlng { get; set; }// Latitude/Longitude start coordinates
         public List<double>? EndLatlng { get; set; }

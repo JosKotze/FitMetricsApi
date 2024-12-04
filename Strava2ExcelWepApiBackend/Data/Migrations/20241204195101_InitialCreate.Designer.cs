@@ -12,7 +12,7 @@ using Strava2ExcelWebApiBackend.Data;
 namespace Strava2ExcelWebApiBackend.Data.Migrations
 {
     [DbContext(typeof(StravaDbContext))]
-    [Migration("20241203190920_InitialCreate")]
+    [Migration("20241204195101_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -88,13 +88,13 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AchievementCount")
+                    b.Property<int?>("AchievementCount")
                         .HasColumnType("int");
 
                     b.Property<long>("ActivityId")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("AthleteCount")
+                    b.Property<int?>("AthleteCount")
                         .HasColumnType("int");
 
                     b.Property<double?>("AverageWatts")
@@ -103,7 +103,7 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
                     b.Property<double?>("Calories")
                         .HasColumnType("float");
 
-                    b.Property<int>("CommentCount")
+                    b.Property<int?>("CommentCount")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
@@ -130,7 +130,7 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
                     b.Property<double?>("Kilojoules")
                         .HasColumnType("float");
 
-                    b.Property<int>("KudosCount")
+                    b.Property<int?>("KudosCount")
                         .HasColumnType("int");
 
                     b.Property<string>("Laps")
@@ -138,12 +138,6 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
 
                     b.Property<double?>("MaxWatts")
                         .HasColumnType("float");
-
-                    b.Property<string>("SegmentEfforts")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SplitMetric")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SportType")
                         .HasColumnType("nvarchar(max)");
@@ -164,17 +158,25 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
 
             modelBuilder.Entity("Strava2ExcelWebApiBackend.Models.Map", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<long>("ActivityId")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("EndLatlng")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("MapId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Polyline")
-                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StartLatlng")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")

@@ -56,13 +56,11 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
                     ElevLow = table.Column<double>(type: "float", nullable: true),
                     DeviceName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EmbedToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SegmentEfforts = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SplitMetric = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Laps = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    KudosCount = table.Column<int>(type: "int", nullable: false),
-                    CommentCount = table.Column<int>(type: "int", nullable: false),
-                    AchievementCount = table.Column<int>(type: "int", nullable: false),
-                    AthleteCount = table.Column<int>(type: "int", nullable: false),
+                    KudosCount = table.Column<int>(type: "int", nullable: true),
+                    CommentCount = table.Column<int>(type: "int", nullable: true),
+                    AchievementCount = table.Column<int>(type: "int", nullable: true),
+                    AthleteCount = table.Column<int>(type: "int", nullable: true),
                     SportType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StartLatlng = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EndLatlng = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -91,11 +89,14 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
                 name: "Maps",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    MapId = table.Column<long>(type: "bigint", nullable: false),
                     ActivityId = table.Column<long>(type: "bigint", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    Polyline = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Polyline = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StartLatlng = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EndLatlng = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {

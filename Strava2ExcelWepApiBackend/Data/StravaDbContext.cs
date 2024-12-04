@@ -28,12 +28,23 @@ namespace Strava2ExcelWebApiBackend.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            //modelBuilder.Entity<SplitMetric>().HasNoKey();
+            //modelBuilder.Entity<SegmentEffort>().HasNoKey();
+            //modelBuilder.Entity<Segment>().HasNoKey();
+            //modelBuilder.Entity<Achievement>().HasNoKey();
+
+
             modelBuilder.Entity<FitmetricModel.Activity>(entity =>
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Id)
                       .ValueGeneratedOnAdd();
             });
+
+            modelBuilder.Entity<Map>()
+                .Property(m => m.Id)
+                .ValueGeneratedOnAdd();
+
             // One-to-One relationship between Activity and ActivityDetails
             //modelBuilder.Entity<FitmetricModel.Activity>()
             //    .HasOne(a => a.ActivityDetails)  // Activity has one ActivityDetails
