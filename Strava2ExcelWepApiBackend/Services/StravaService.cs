@@ -35,6 +35,20 @@ namespace Strava2ExcelWebApiBackend.Models
             this.httpClient = httpClient;
         }
 
+        public async Task SaveActivityMapAndDetails(string accessToken, int userId, long activityId)
+        {
+            await SyncActivitiesWithDatabaseAsync(accessToken, userId);
+
+
+            var detailedData = await GetActivityByIdAsync(activityId, true, accessToken);
+            var activityDetails = MapToActivityDetails(detailedData, userId); // Map to ActivityDetails model
+
+            var mapDetails = MapToMap(activityId, userId, detailedData.map.Polyline, detailedData.start_latlng, detailedData.end_latlng);
+
+            await SaveActivityDetailsAsync(activityDetails);
+            await SaveActivityMapAsync(mapDetails);
+        }
+
         // new One with saving MAP.
         public async Task SyncActivitiesWithDatabaseAsync2(string accessToken, int userId)
         {
@@ -192,7 +206,9 @@ namespace Strava2ExcelWebApiBackend.Models
                 // Manually extract properties
                 var activity = new StravaActivityData
                 {
-                    map = json["map"]?.ToObject<Map>()
+                    map = json["map"]?.ToObject<Map>(),
+                    start_latlng = json["start_latlng"]?.ToObject<List<double>>(), // Deserialize as List<double>
+                    end_latlng = json["end_latlng"]?.ToObject<List<double>>(), // Deserialize as List<double>
                     //pace = json["pace"]?.Value<string>(),
                     //resource_state = json["resource_state"]?.Value<int>() ?? 0, // Default to 0 if null
                     //Athlete = json["athlete"]?.ToObject<User>(),
