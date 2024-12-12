@@ -23,7 +23,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Strava2ExcelWebApiBackend.Models
 {
-    public class StravaService : IStravaService
+    public partial class StravaService : IStravaService
     {
         private readonly StravaDbContext context;
         private readonly IHttpClientFactory httpClientFactory;
@@ -35,17 +35,54 @@ namespace Strava2ExcelWebApiBackend.Models
             this.httpClient = httpClient;
         }
 
+
+        public async Task<SaveActivityResult> SaveActivityAsync(string accessToken, int userId, long activityId)
+        {
+            // Check if the activity already exists
+            var existingActivity = await context.Maps
+                .FirstOrDefaultAsync(x => x.ActivityId == activityId);
+
+            if (existingActivity != null)
+            {
+                return SaveActivityResult.AlreadyExists;
+            }
+
+            // Fetch and save activity details
+            //var activityDetails = await SaveActivityMapAndDetails(accessToken, userId, activityId);
+            //var existingActivity = await context.Maps
+            //     .Where(x => x.ActivityId == activityId && x.UserId == userId)
+            //     .FirstOrDefaultAsync();
+
+            //if (existingActivity == null)
+            //{
+            //    return SaveActivityResult.Failed;
+            //}
+
+            // Save the activity
+            //var newActivity = new Map
+            //{
+            //    ActivityId = activityId,
+            //    UserId = userId,
+            //    MapData = activityDetails.MapData,
+            //};
+
+
+            await SaveActivityMapAndDetails(accessToken, userId, activityId);
+
+            return SaveActivityResult.Success;
+        }
+
         public async Task SaveActivityMapAndDetails(string accessToken, int userId, long activityId)
         {
-            await SyncActivitiesWithDatabaseAsync(accessToken, userId);
+            //await SyncActivitiesWithDatabaseAsync(accessToken, userId);
 
 
             var detailedData = await GetActivityByIdAsync(activityId, true, accessToken);
-            var activityDetails = MapToActivityDetails(detailedData, userId); // Map to ActivityDetails model
+            //var activityDetails = MapToActivityDetails(detailedData, userId); // Map to ActivityDetails model
 
             var mapDetails = MapToMap(activityId, userId, detailedData.map.Polyline, detailedData.start_latlng, detailedData.end_latlng);
 
-            await SaveActivityDetailsAsync(activityDetails);
+            //await SaveActivityDetailsAsync(activityDetails);
             await SaveActivityMapAsync(mapDetails);
         }
 

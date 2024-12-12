@@ -3,6 +3,7 @@ using Strava2ExcelWebApiBackend.DTOs;
 using Strava2ExcelWebApiBackend.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using static Strava2ExcelWebApiBackend.Models.StravaService;
 
 namespace Strava2ExcelWebApiBackend.Interfaces
 {
@@ -15,6 +16,7 @@ namespace Strava2ExcelWebApiBackend.Interfaces
         Task SyncActivitiesWithDatabaseAsync2(string accessToken, int userId);
         Task<StravaActivityData> GetActivityByIdAsync(long activityId, bool includeAllEfforts, string token);
         Task SaveActivityMapAndDetails(string accessToken, int userId, long activityId);
+        Task<SaveActivityResult> SaveActivityAsync(string accessToken, int userId, long activityId);
     }
 
     //public interface IStravaService
