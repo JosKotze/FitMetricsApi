@@ -60,15 +60,29 @@ namespace Strava2ExcelWepApiBackend.Controllers
             }
         }
 
-
-        [HttpGet("getActivityMap")]
-        public async Task<ActionResult<Map>> getActivityMap(int userId, long activityId)
+        [HttpPost("getActivityMap")]
+        public async Task<ActionResult<Map>> getActivityMap([FromBody] GetActivityMapRequest request)
         {
             try
             {
                 var map = await context.Maps
-                     .Where(x => x.ActivityId == activityId && x.UserId == userId)
-                     .FirstOrDefaultAsync();
+                    .Where(x => x.ActivityId == request.ActivityId && x.UserId == request.UserId)
+                    .FirstOrDefaultAsync();
+                if (map == null)
+                {
+                    var accessToken = request.AccessToken?.Trim('"');
+
+                    var result = await stravaService.SaveActivityAsync(accessToken, request.UserId, request.ActivityId);
+
+                    if (result == SaveActivityResult.Success)
+                    {
+                        var mapRetry = await context.Maps
+                            .Where(x => x.ActivityId == request.ActivityId && x.UserId == request.UserId)
+                            .FirstOrDefaultAsync();
+
+                        return Ok(mapRetry);
+                    }
+                }
 
                 return Ok(map);
             }
@@ -76,6 +90,47 @@ namespace Strava2ExcelWepApiBackend.Controllers
             {
                 return StatusCode(500, $"internal server error: {ex.Message}");
             }
+        }
+
+
+
+        //[HttpGet("getActivityMap")]
+        //public async Task<ActionResult<Map>> getActivityMap([FromBody] GetActivityMapRequest request)
+        //{
+        //    try
+        //    {
+        //        var map = await context.Maps
+        //             .Where(x => x.ActivityId == request.ActivityId && x.UserId == request.UserId)
+        //             .FirstOrDefaultAsync();
+        //        if (map == null)
+        //        {
+        //            var accessToken = request.AccessToken?.Trim('"');
+
+        //            var result = await stravaService.SaveActivityAsync(accessToken, request.UserId, request.ActivityId);
+
+        //            if (result == SaveActivityResult.Success)
+        //            {
+        //                var mapRetry = await context.Maps
+        //                 .Where(x => x.ActivityId == request.ActivityId && x.UserId == request.UserId)
+        //                 .FirstOrDefaultAsync();
+
+        //                return Ok(mapRetry);
+        //            }
+        //        }
+
+        //        return Ok(map);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, $"internal server error: {ex.Message}");
+        //    }
+        //}
+
+        public class GetActivityMapRequest
+        {
+            public string AccessToken { get; set; }
+            public int UserId { get; set; }
+            public long ActivityId { get; set; }
         }
 
         //[HttpPost("saveActivityMapAndDetails")]
