@@ -161,7 +161,7 @@ namespace Strava2ExcelWepApiBackend.Controllers
         {
             try
             {
-                await stravaService.SyncActivitiesWithDatabaseAsync2(accessToken, userId);
+                await stravaService.SyncActivitiesWithDatabaseAsync(accessToken, userId);
                 return Ok("Sync completed successfully.");
             }
             catch (Exception ex)
@@ -201,12 +201,13 @@ namespace Strava2ExcelWepApiBackend.Controllers
                 return StatusCode(500, $"An error occurred: {ex.Message}");
             }
         }
-
         [HttpGet("getPagedActivities")]
         public async Task<ActionResult<IEnumerable<FitmetricModel.Activity>>> GetPagedActivities([FromQuery] ActivityParams activityParams)
         {
-            // Modify the query to use IQueryable instead of fetching all data immediately
-            var query = context.Activities.AsQueryable();
+            // Modify the query to use IQueryable and order by StartDate
+            var query = context.Activities
+                                .OrderByDescending(a => a.StartDate) // Order by StartDate in ascending order
+                                .AsQueryable();
 
             // Apply pagination
             var pagedActivities = await PagedList<FitmetricModel.Activity>.CreateAsync(query, activityParams.pageNumber, activityParams.PageSize);
@@ -217,6 +218,23 @@ namespace Strava2ExcelWepApiBackend.Controllers
             // Return the paginated result
             return Ok(pagedActivities);
         }
+
+
+        //[HttpGet("getPagedActivities")]
+        //public async Task<ActionResult<IEnumerable<FitmetricModel.Activity>>> GetPagedActivities([FromQuery] ActivityParams activityParams)
+        //{
+        //    // Modify the query to use IQueryable instead of fetching all data immediately
+        //    var query = context.Activities.AsQueryable();
+
+        //    // Apply pagination
+        //    var pagedActivities = await PagedList<FitmetricModel.Activity>.CreateAsync(query, activityParams.pageNumber, activityParams.PageSize);
+
+        //    // Add pagination header
+        //    Response.AddPaginationHeader(pagedActivities);
+
+        //    // Return the paginated result
+        //    return Ok(pagedActivities);
+        //}
 
         [HttpGet("getSavedActivities")]
         public async Task<ActionResult<List<FitmetricModel.Activity>>> GetSavedActivities()
