@@ -19,21 +19,20 @@ namespace Strava2ExcelWepApiBackend.Controllers
 {
     public class ActivitiesController(StravaDbContext context, IStravaService stravaService) : BaseApiController
     {
-        //[HttpPost("getActivityMapAndDetails")]
-        //public async Task<ActionResult> GetActivityMapAndDetails(int userId, long activityId)
-        //{
-        //    try
-        //    {
-        //        var map = await context.Maps.Where(x => x.ActivityId == activityId && x.UserId == userId).FirstAsync();
+        [HttpGet("getActivityById")]
+        public async Task<ActionResult<FitmetricModel.Activity>> GetActivityById(int userId, long activityId)
+        {
+            try
+            {
+                var activity = await context.Activities.FirstOrDefaultAsync(x => x.ActivityId == activityId && x.UserId == userId);
 
-        //        return Ok(map);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // log or handle exceptions
-        //        return StatusCode(500, $"internal server error: {ex.Message}");
-        //    }
-        //}
+                return Ok(activity);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
 
         [HttpPost("saveActivityMap")]
         public async Task<ActionResult> SaveActivityMap(string accessToken, int userId, long activityId)
@@ -92,69 +91,12 @@ namespace Strava2ExcelWepApiBackend.Controllers
             }
         }
 
-
-
-        //[HttpGet("getActivityMap")]
-        //public async Task<ActionResult<Map>> getActivityMap([FromBody] GetActivityMapRequest request)
-        //{
-        //    try
-        //    {
-        //        var map = await context.Maps
-        //             .Where(x => x.ActivityId == request.ActivityId && x.UserId == request.UserId)
-        //             .FirstOrDefaultAsync();
-        //        if (map == null)
-        //        {
-        //            var accessToken = request.AccessToken?.Trim('"');
-
-        //            var result = await stravaService.SaveActivityAsync(accessToken, request.UserId, request.ActivityId);
-
-        //            if (result == SaveActivityResult.Success)
-        //            {
-        //                var mapRetry = await context.Maps
-        //                 .Where(x => x.ActivityId == request.ActivityId && x.UserId == request.UserId)
-        //                 .FirstOrDefaultAsync();
-
-        //                return Ok(mapRetry);
-        //            }
-        //        }
-
-        //        return Ok(map);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, $"internal server error: {ex.Message}");
-        //    }
-        //}
-
         public class GetActivityMapRequest
         {
             public string AccessToken { get; set; }
             public int UserId { get; set; }
             public long ActivityId { get; set; }
         }
-
-        //[HttpPost("saveActivityMapAndDetails")]
-        //public async Task<ActionResult> SaveActivityMapAndDetails(string accessToken, int userId, long activityId)
-        //{
-        //    try
-        //    {
-        //        var existingActivity = await context.Maps
-        //             .Where(x => x.ActivityId == activityId)
-        //             .FirstOrDefaultAsync();
-
-        //        if (existingActivity == null) {
-
-        //        }
-        //        await stravaService.SaveActivityMapAndDetails(accessToken, userId, activityId);
-
-        //       return Ok();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // log or handle exceptions
-        //        return StatusCode(500, $"internal server error: {ex.Message}");
-        //    }
-        //}
 
         [HttpGet("syncActivities")]
         public async Task<ActionResult> SyncActivities(int userId, string accessToken)
