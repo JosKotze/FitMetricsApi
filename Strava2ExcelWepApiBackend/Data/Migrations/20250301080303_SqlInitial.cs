@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Strava2ExcelWebApiBackend.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class SqlInitial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -91,7 +91,7 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    MapId = table.Column<long>(type: "bigint", nullable: false),
+                    MapId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ActivityId = table.Column<long>(type: "bigint", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     Polyline = table.Column<string>(type: "nvarchar(max)", nullable: true),

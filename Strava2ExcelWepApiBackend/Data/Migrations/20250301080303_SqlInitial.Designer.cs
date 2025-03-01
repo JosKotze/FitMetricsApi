@@ -12,8 +12,8 @@ using Strava2ExcelWebApiBackend.Data;
 namespace Strava2ExcelWebApiBackend.Data.Migrations
 {
     [DbContext(typeof(StravaDbContext))]
-    [Migration("20241204195101_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250301080303_SqlInitial")]
+    partial class SqlInitial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -170,8 +170,8 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
                     b.Property<string>("EndLatlng")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("MapId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("MapId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Polyline")
                         .HasColumnType("nvarchar(max)");
