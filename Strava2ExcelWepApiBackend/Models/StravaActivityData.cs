@@ -1,8 +1,13 @@
-﻿namespace Strava2ExcelWebApiBackend.Models
+﻿using Newtonsoft.Json.Linq;
+using Strava2ExcelWebApiBackend.Helpers;
+using Strava2ExcelWebApiBackend.Models;
+using System.Text.Json.Serialization;
+
+namespace Strava2ExcelWebApiBackend.Models
 {
     public class StravaActivityData
     {
-        public string? Pace { get; set; }
+        public string? pace { get; set; }
         public int resource_state { get; set; }
         public User? Athlete { get; set; }
         public string? name { get; set; }
@@ -55,9 +60,78 @@
         public int total_photo_count { get; set; }
         public bool has_kudoed { get; set; }
         public int UserId { get; set; }
-    }
 
-    public class Map
-    {
+        public string? description { get; set; }
+        public double calories { get; set; }
+        public string? device_name { get; set; }
+        public string? embed_token { get; set; }
+
+        //public List<SegmentEffort>? segment_efforts { get; set; }
+        //public List<SplitMetric>? split_metric { get; set; }
+
+        public string? laps { get; set; }
+
     }
 }
+
+//public class SegmentEffort
+//{
+//    public long Id { get; set; }
+//    public int ResourceState { get; set; }
+//    public string Name { get; set; }
+//    //public Activity Activity { get; set; }  // Related Activity
+//    //public User Athlete { get; set; }    // Related Athlete
+//    public int ElapsedTime { get; set; }
+//    public int MovingTime { get; set; }
+//    public DateTime StartDate { get; set; }
+//    public DateTime StartDateLocal { get; set; }
+//    public double Distance { get; set; }
+//    public int StartIndex { get; set; }
+//    public int EndIndex { get; set; }
+//    public bool DeviceWatts { get; set; }
+//    public double AverageHeartRate { get; set; }
+//    public double MaxHeartRate { get; set; }
+//    public Segment Segment { get; set; }  // Related Segment
+//    public int PrRank { get; set; }
+//    public List<Achievement> Achievements { get; set; }  // Related Achievements
+//    public string Visibility { get; set; }
+//    public bool Hidden { get; set; }
+//}
+
+//public class Segment
+//{
+//    public long Id { get; set; }
+//    public int ResourceState { get; set; }
+//    public string Name { get; set; }
+//    public string ActivityType { get; set; }
+//    public double Distance { get; set; }
+//    public double AverageGrade { get; set; }
+//    public double MaximumGrade { get; set; }
+//    public double ElevationHigh { get; set; }
+//    public double ElevationLow { get; set; }
+//    public List<double> StartLatlng { get; set; }
+//    public List<double> EndLatlng { get; set; }
+//    public int ClimbCategory { get; set; }
+//    public string City { get; set; }
+//    public string State { get; set; }
+//    public string Country { get; set; }
+//    public bool Private { get; set; }
+//    public bool Hazardous { get; set; }
+//    public bool Starred { get; set; }
+//}
+
+//public class Achievement
+//{
+//    public int TypeId { get; set; }
+//    public string Type { get; set; }
+//    public int Rank { get; set; }
+//}
+
+
+////public class SplitMetric
+////{
+////    public double Time { get; set; }
+////    public double Pace { get; set; }
+////    // Define other relevant properties based on the structure of your data
+////}
+

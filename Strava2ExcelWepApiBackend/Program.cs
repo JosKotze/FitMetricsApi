@@ -27,6 +27,9 @@ app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localho
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -38,5 +41,7 @@ if (app.Environment.IsDevelopment())
 //app.UseRouting();
 
 app.MapControllers();
+
+app.MapFallbackToController("Index", "Fallback");
 
 app.Run();

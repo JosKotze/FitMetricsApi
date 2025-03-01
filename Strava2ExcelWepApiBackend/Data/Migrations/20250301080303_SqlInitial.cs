@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Strava2ExcelWebApiBackend.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class SqlInitial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -23,51 +23,51 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Distance = table.Column<double>(type: "float", nullable: false),
                     MovingTime = table.Column<int>(type: "int", nullable: false),
-                    ElapsedTime = table.Column<int>(type: "int", nullable: false),
+                    AverageHeartrate = table.Column<double>(type: "float", nullable: true),
+                    AverageSpeed = table.Column<double>(type: "float", nullable: false),
                     TotalElevationGain = table.Column<double>(type: "float", nullable: false),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     StartDateLocal = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Timezone = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UtcOffset = table.Column<double>(type: "float", nullable: true),
-                    LocationCity = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LocationState = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LocationCountry = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    AchievementCount = table.Column<int>(type: "int", nullable: true),
-                    KudosCount = table.Column<int>(type: "int", nullable: true),
-                    Commentount = table.Column<int>(type: "int", nullable: true),
-                    AthleteCount = table.Column<int>(type: "int", nullable: true),
-                    PhotoCount = table.Column<int>(type: "int", nullable: true),
+                    MaxHeartrate = table.Column<double>(type: "float", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Activities", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ActivityDetails",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ActivityId = table.Column<long>(type: "bigint", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Calories = table.Column<double>(type: "float", nullable: true),
                     Trainer = table.Column<bool>(type: "bit", nullable: true),
-                    Commute = table.Column<bool>(type: "bit", nullable: true),
-                    Manual = table.Column<bool>(type: "bit", nullable: true),
-                    Private = table.Column<bool>(type: "bit", nullable: true),
-                    Visibility = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Flagged = table.Column<bool>(type: "bit", nullable: true),
-                    GearId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    StartLatlng = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    EndLatlng = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    AverageSpeed = table.Column<double>(type: "float", nullable: false),
-                    MaxSpeed = table.Column<double>(type: "float", nullable: false),
                     AverageWatts = table.Column<double>(type: "float", nullable: true),
                     MaxWatts = table.Column<double>(type: "float", nullable: true),
                     WeightedAverageWatts = table.Column<double>(type: "float", nullable: true),
                     Kilojoules = table.Column<double>(type: "float", nullable: true),
                     DeviceWatts = table.Column<bool>(type: "bit", nullable: true),
-                    HasHeartrate = table.Column<bool>(type: "bit", nullable: false),
-                    AverageHeartrate = table.Column<double>(type: "float", nullable: true),
-                    MaxHeartrate = table.Column<double>(type: "float", nullable: true),
                     ElevHigh = table.Column<double>(type: "float", nullable: true),
                     ElevLow = table.Column<double>(type: "float", nullable: true),
-                    PrCount = table.Column<int>(type: "int", nullable: false),
-                    UploadId = table.Column<long>(type: "bigint", nullable: true),
-                    ExternalId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TotalPhotoCount = table.Column<int>(type: "int", nullable: false),
-                    HasKudoed = table.Column<bool>(type: "bit", nullable: false)
+                    DeviceName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EmbedToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Laps = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    KudosCount = table.Column<int>(type: "int", nullable: true),
+                    CommentCount = table.Column<int>(type: "int", nullable: true),
+                    AchievementCount = table.Column<int>(type: "int", nullable: true),
+                    AthleteCount = table.Column<int>(type: "int", nullable: true),
+                    SportType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StartLatlng = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EndLatlng = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Activities", x => x.Id);
+                    table.PrimaryKey("PK_ActivityDetails", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -84,6 +84,24 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
                 {
                     table.PrimaryKey("PK_Athletes", x => x.Id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "Maps",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    MapId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ActivityId = table.Column<long>(type: "bigint", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Polyline = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StartLatlng = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EndLatlng = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Maps", x => x.Id);
+                });
         }
 
         /// <inheritdoc />
@@ -93,7 +111,13 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
                 name: "Activities");
 
             migrationBuilder.DropTable(
+                name: "ActivityDetails");
+
+            migrationBuilder.DropTable(
                 name: "Athletes");
+
+            migrationBuilder.DropTable(
+                name: "Maps");
         }
     }
 }
