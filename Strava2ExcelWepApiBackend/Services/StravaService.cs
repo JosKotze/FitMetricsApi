@@ -21,6 +21,10 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using Newtonsoft.Json.Linq;
 // we are using EPPlus nuget package
 
+//using com.strava.api.v3.Api;
+//using com.strava.api.v3.Client;
+//using com.strava.api.v3.Model;
+
 namespace Strava2ExcelWebApiBackend.Models
 {
     public partial class StravaService : IStravaService

@@ -26,7 +26,7 @@ namespace Strava2ExcelWebApiBackend.Services
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddDays(7),
+                Expires = DateTime.UtcNow.AddHours(6), // Made it the same as Strava Auth AccessToken (6 hours)
                 SigningCredentials = creds
             };
 

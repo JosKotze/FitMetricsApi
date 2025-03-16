@@ -14,6 +14,7 @@ using Azure.Core;
 using Strava2ExcelWebApiBackend.Helpers;
 using Strava2ExcelWebApiBackend.Extensions;
 using static Strava2ExcelWebApiBackend.Models.StravaService;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Strava2ExcelWepApiBackend.Controllers
 {
@@ -69,9 +70,9 @@ namespace Strava2ExcelWepApiBackend.Controllers
                     .FirstOrDefaultAsync();
                 if (map == null)
                 {
-                    var accessToken = request.AccessToken?.Trim('"');
+                    //var accessToken = request.AccessToken?.Trim('"');
 
-                    var result = await stravaService.SaveActivityAsync(accessToken, request.UserId, request.ActivityId);
+                    var result = await stravaService.SaveActivityAsync(request.AccessToken, request.UserId, request.ActivityId);
 
                     if (result == SaveActivityResult.Success)
                     {
@@ -143,6 +144,7 @@ namespace Strava2ExcelWepApiBackend.Controllers
                 return StatusCode(500, $"An error occurred: {ex.Message}");
             }
         }
+
         [HttpGet("getPagedActivities")]
         public async Task<ActionResult<IEnumerable<FitmetricModel.Activity>>> GetPagedActivities([FromQuery] ActivityParams activityParams)
         {

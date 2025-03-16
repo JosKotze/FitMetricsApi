@@ -1,4 +1,5 @@
 ﻿using Azure.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Strava2ExcelWebApiBackend.Data;
@@ -10,8 +11,12 @@ using System.Text;
 
 namespace Strava2ExcelWebApiBackend.Controllers
 {
-    public class AccountController(StravaDbContext context, ITokenService tokenService) : BaseApiController
+    [AllowAnonymous]
+    [ApiController]
+    [Route("api/account")]
+    public class AccountController(StravaDbContext context, ITokenService tokenService) : ControllerBase
     {
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         {
@@ -39,6 +44,7 @@ namespace Strava2ExcelWebApiBackend.Controllers
             };
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
