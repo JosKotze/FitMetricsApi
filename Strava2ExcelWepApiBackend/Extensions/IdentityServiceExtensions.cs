@@ -6,8 +6,7 @@ namespace Strava2ExcelWebApiBackend.Extensions
 {
     public static class IdentityServiceExtensions
     {
-        public static IServiceCollection AddIdendityServices(this IServiceCollection services,
-     IConfiguration config)
+        public static IServiceCollection AddIdendityServices(this IServiceCollection services, IConfiguration config)
         {
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
@@ -16,8 +15,26 @@ namespace Strava2ExcelWebApiBackend.Extensions
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey)),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidIssuer = config["Jwt:Issuer"] ?? "FitMetrics",
+                    ValidAudience = config["Jwt:Audience"] ?? "FitMetricsAPI"
+                };
+
+                // Add debug logging for authentication failures
+                options.Events = new JwtBearerEvents
+                {
+                    OnAuthenticationFailed = context =>
+                    {
+                        Console.WriteLine("Authentication failed: " + context.Exception.Message);
+                        return Task.CompletedTask;
+                    },
+                    OnTokenValidated = context =>
+                    {
+                        Console.WriteLine("Token validated successfully");
+                        return Task.CompletedTask;
+                    }
                 };
             });
 

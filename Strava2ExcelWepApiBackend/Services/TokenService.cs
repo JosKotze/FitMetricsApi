@@ -17,17 +17,25 @@ namespace Strava2ExcelWebApiBackend.Services
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey));
 
-            var claims = new List<Claim>{
-            new Claim(ClaimTypes.Email, user.UserName)
-        };
+            var claims = new List<Claim>
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()), // Subject (user ID)
+                new Claim(JwtRegisteredClaimNames.Email, user.UserName), // Email
+                new Claim(JwtRegisteredClaimNames.Iss, config["Jwt:Issuer"] ?? "FitMetrics"), // Issuer
+                //new Claim(JwtRegisteredClaimNames.Aud, config["Jwt:Audience"] ?? "FitMetricsAPI"), // Audience
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), // Unique token ID
+                new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64) // Issued at
+            };
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddHours(6), // Made it the same as Strava Auth AccessToken (6 hours)
-                SigningCredentials = creds
+                Expires = DateTime.UtcNow.AddHours(6),
+                SigningCredentials = creds,
+                Issuer = config["Jwt:Issuer"] ?? "FitMetrics", // Explicit issuer
+                Audience = config["Jwt:Audience"] ?? "FitMetricsAPI" // Explicit audience
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -35,6 +43,5 @@ namespace Strava2ExcelWebApiBackend.Services
 
             return tokenHandler.WriteToken(token);
         }
-
     }
 }
