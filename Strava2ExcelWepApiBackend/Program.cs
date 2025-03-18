@@ -56,7 +56,8 @@ var app = builder.Build();
 
 app.UseCors(x => x.WithOrigins("http://localhost:4200", "https://localhost:4200", "https://fitmetrics.azurewebsites.net")
     .AllowAnyHeader()
-    .AllowAnyMethod());
+    .AllowAnyMethod()
+    .AllowCredentials());
 //app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()); // change later 
 
 app.UseSwagger();
