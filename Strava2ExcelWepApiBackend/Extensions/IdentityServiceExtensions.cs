@@ -18,8 +18,8 @@ namespace Strava2ExcelWebApiBackend.Extensions
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateLifetime = true,
-                    ValidIssuer = config["Jwt:Issuer"] ?? "FitMetrics",
-                    ValidAudience = config["Jwt:Audience"] ?? "FitMetricsAPI"
+                    ValidIssuer = config["Jwt:Issuer"] ?? "FitMetricsProd",
+                    ValidAudience = config["Jwt:Audience"] ?? "FitMetricsAPIProd"
                 };
 
                 // Add debug logging for authentication failures

@@ -21,7 +21,7 @@ namespace Strava2ExcelWebApiBackend.Services
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()), // Subject (user ID)
                 new Claim(JwtRegisteredClaimNames.Email, user.UserName), // Email
-                new Claim(JwtRegisteredClaimNames.Iss, config["Jwt:Issuer"] ?? "FitMetrics"), // Issuer
+                new Claim(JwtRegisteredClaimNames.Iss, config["Jwt:Issuer"] ?? "FitMetricsProd"), // Issuer
                 //new Claim(JwtRegisteredClaimNames.Aud, config["Jwt:Audience"] ?? "FitMetricsAPI"), // Audience
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), // Unique token ID
                 new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64) // Issued at
@@ -34,8 +34,8 @@ namespace Strava2ExcelWebApiBackend.Services
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.AddHours(6),
                 SigningCredentials = creds,
-                Issuer = config["Jwt:Issuer"] ?? "FitMetrics", // Explicit issuer
-                Audience = config["Jwt:Audience"] ?? "FitMetricsAPI" // Explicit audience
+                Issuer = config["Jwt:Issuer"] ?? "FitMetricsProd", // Explicit issuer
+                Audience = config["Jwt:Audience"] ?? "FitMetricsAPIProd" // Explicit audience
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();

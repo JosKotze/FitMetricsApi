@@ -54,8 +54,10 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
-//app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200", "https://localhost:4200", "https://fitmetrics.azurewebsites.net"));
-app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+app.UseCors(x => x.WithOrigins("http://localhost:4200", "https://localhost:4200", "https://fitmetrics.azurewebsites.net")
+    .AllowAnyHeader()
+    .AllowAnyMethod());
+//app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()); // change later 
 
 app.UseSwagger();
 app.UseSwaggerUI();
