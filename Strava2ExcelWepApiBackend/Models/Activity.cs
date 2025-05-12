@@ -2,7 +2,7 @@
 {
     public class Activity
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         public long ActivityId { get; set; }
         public int UserId { get; set; }
         public string? Pace { get; set; }
