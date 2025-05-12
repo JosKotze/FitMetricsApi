@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Strava2ExcelWebApiBackend.Data;
 
@@ -11,9 +12,11 @@ using Strava2ExcelWebApiBackend.Data;
 namespace Strava2ExcelWebApiBackend.Data.Migrations
 {
     [DbContext(typeof(StravaDbContext))]
-    partial class StravaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250409180345_AddActivityDetailsAndMapTables")]
+    partial class AddActivityDetailsAndMapTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -100,9 +103,6 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
                     b.Property<double?>("AverageCadence")
                         .HasColumnType("float");
 
-                    b.Property<double?>("AverageHeartrate")
-                        .HasColumnType("float");
-
                     b.Property<double>("AverageSpeed")
                         .HasColumnType("float");
 
@@ -119,9 +119,11 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DeviceName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool?>("DeviceWatts")
@@ -140,18 +142,22 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("EmbedToken")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EndLatlng")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ExternalId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Flagged")
                         .HasColumnType("bit");
 
                     b.Property<string>("GearId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("HasKudoed")
@@ -164,16 +170,15 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("LapsJson")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Manual")
                         .HasColumnType("bit");
 
                     b.Property<string>("MapId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<double?>("MaxHeartrate")
-                        .HasColumnType("float");
 
                     b.Property<double>("MaxSpeed")
                         .HasColumnType("float");
@@ -185,12 +190,14 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PhotoCount")
                         .HasColumnType("int");
 
                     b.Property<string>("Polyline")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PrCount")
@@ -203,12 +210,15 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("SegmentEffortsJson")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SplitsMetricJson")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SportType")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("StartDate")
@@ -218,12 +228,15 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("StartLatlng")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SummaryPolyline")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Timezone")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("TotalElevationGain")
@@ -236,18 +249,17 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Type")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("UploadId")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.Property<double?>("UtcOffset")
                         .HasColumnType("float");
 
                     b.Property<string>("Visibility")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("WeightedAverageWatts")

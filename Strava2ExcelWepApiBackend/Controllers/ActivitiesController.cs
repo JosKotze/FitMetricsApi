@@ -60,6 +60,21 @@ namespace Strava2ExcelWepApiBackend.Controllers
             }
         }
 
+        [HttpGet("getActivityDetails")]
+        public async Task<ActionResult<ActivityDetails>> GetActivityDetails(int userId, long activityId)
+        {
+            try
+            {
+                var activity = await context.ActivityDetails.
+                    Where(x => x.ActivityId == activityId && x.UserId == userId).ToListAsync();
+                return Ok(activity);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+        }
+
         [HttpPost("getActivityMap")]
         public async Task<ActionResult<Map>> getActivityMap([FromBody] GetActivityMapRequest request)
         {
@@ -94,7 +109,7 @@ namespace Strava2ExcelWepApiBackend.Controllers
 
         public class GetActivityMapRequest
         {
-            public string AccessToken { get; set; }
+            public string? AccessToken { get; set; }
             public int UserId { get; set; }
             public long ActivityId { get; set; }
         }

@@ -13,7 +13,7 @@ namespace Strava2ExcelWebApiBackend.Interfaces
         //Activity MapToActivity(StravaActivityData activity, int userId);
         Task SaveStravaActivitiesAsync(List<StravaActivityData> stravaActivities, int userId);
         Task SyncActivitiesWithDatabaseAsync(string accessToken, int userId);
-        Task SyncActivitiesWithDatabaseAsync2(string accessToken, int userId);
+        //Task SyncActivitiesWithDatabaseAsync2(string accessToken, int userId);
         Task<StravaActivityData> GetActivityByIdAsync(long activityId, bool includeAllEfforts, string token);
         Task SaveActivityMapAndDetails(string accessToken, int userId, long activityId);
         Task<SaveActivityResult> SaveActivityAsync(string accessToken, int userId, long activityId);

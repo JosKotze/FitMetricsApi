@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Strava2ExcelWebApiBackend.Data;
 
@@ -11,9 +12,11 @@ using Strava2ExcelWebApiBackend.Data;
 namespace Strava2ExcelWebApiBackend.Data.Migrations
 {
     [DbContext(typeof(StravaDbContext))]
-    partial class StravaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250409190013_AddActivityDetailsAndMapTablesThree")]
+    partial class AddActivityDetailsAndMapTablesThree
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -100,9 +103,6 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
                     b.Property<double?>("AverageCadence")
                         .HasColumnType("float");
 
-                    b.Property<double?>("AverageHeartrate")
-                        .HasColumnType("float");
-
                     b.Property<double>("AverageSpeed")
                         .HasColumnType("float");
 
@@ -171,9 +171,6 @@ namespace Strava2ExcelWebApiBackend.Data.Migrations
 
                     b.Property<string>("MapId")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<double?>("MaxHeartrate")
-                        .HasColumnType("float");
 
                     b.Property<double>("MaxSpeed")
                         .HasColumnType("float");
