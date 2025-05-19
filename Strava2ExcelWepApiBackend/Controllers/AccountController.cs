@@ -63,6 +63,7 @@ namespace Strava2ExcelWebApiBackend.Controllers
 
             return new UserDto
             {
+                Id = user.Id,
                 UserName = user.UserName,
                 Token = tokenService.CreateToken(user)
             };

@@ -28,6 +28,7 @@ namespace Strava2ExcelWebApiBackend.Extensions
             services.AddSwaggerGen();
             //services.AddScoped<IUserService, UserService>();
             services.AddScoped<IStravaService, StravaService>();
+            services.AddScoped<IExcelService, ExcelService>();
             services.AddScoped<ITokenService, TokenService>();
 
             return services;
